@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build:css": "npx @tailwindcss/cli -i ./Styles/app.css -o ./wwwroot/app.css --watch"
+    "build:css": "npx @tailwindcss/cli -i ./Styles/app.css -o ./spa-reservas-blazor/wwwroot/app.css --watch"
   },
   "repository": {
     "type": "git",
