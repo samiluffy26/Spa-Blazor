@@ -1,0 +1,55 @@
+@using spa_reservas_blazor.Models
+
+<div class="bg-white rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
+    @* Imagen *@
+    <div class="relative h-48 overflow-hidden">
+        <div class="absolute inset-0 bg-gray-200 animate-pulse">
+            @* Placeholder simulación de imagen *@
+            @if (!string.IsNullOrEmpty(Service.ImageUrl))
+            {
+               <img src="@Service.ImageUrl" alt="@Service.Name" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+            }
+            else
+            {
+                <div class="w-full h-full bg-sage-100 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles text-sage-300"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                </div>
+            }
+        </div>
+        <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-primary-700">
+            @Service.Duration min
+        </div>
+    </div>
+
+    @* Contenido *@
+    <div class="p-6">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <h3 class="font-serif font-bold text-xl text-gray-900 mb-2">
+                    @Service.Name
+                </h3>
+                <p class="text-sm text-primary-600 font-medium bg-primary-50 inline-block px-2 py-1 rounded-md">
+                    @Service.Category
+                </p>
+            </div>
+            <p class="text-xl font-bold text-gray-900">
+                $@Service.Price
+            </p>
+        </div>
+
+        <p class="text-gray-600 mb-6 line-clamp-2">
+            @Service.Description
+        </p>
+
+        <NavLink href="@($"services/{Service.Id}")" class="block">
+            <button class="w-full btn-secondary group-hover:bg-primary-600 group-hover:text-white transition-colors">
+                Reservar
+            </button>
+        </NavLink>
+    </div>
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public Service Service { get; set; } = default!;
+}
