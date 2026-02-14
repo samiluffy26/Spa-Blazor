@@ -1,0 +1,145 @@
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveAuto
+
+@* Top Bar - Info de contacto *@
+<div class="bg-sage-800 text-white py-2 hidden md:block">
+    <div class="container-custom">
+        <div class="flex justify-between items-center text-sm">
+            <div class="flex items-center gap-6">
+                <a href="tel:+18095551234" class="flex items-center gap-2 hover:text-sage-200 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    <span>(809) 555-1234</span>
+                </a>
+                <a href="mailto:info@relaxspa.com" class="flex items-center gap-2 hover:text-sage-200 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    <span>info@relaxspa.com</span>
+                </a>
+            </div>
+            <div>
+                <span class="text-sage-200">Lun - Sáb: 9:00 AM - 7:00 PM</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Header Principal *@
+<header class="sticky top-0 z-40 transition-all duration-300 @(_isScrolled ? "bg-white/95 backdrop-blur-md shadow-md" : "bg-white")">
+    <div class="container-custom">
+        <div class="flex items-center justify-between h-20">
+            
+            @* Logo *@
+            <NavLink href="/" class="flex items-center gap-3 group">
+                <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-sage-600 rounded-2xl flex items-center justify-center transform group-hover:scale-105 transition-transform">
+                    <span class="text-2xl font-serif font-bold text-white">R</span>
+                </div>
+                <div class="hidden sm:block">
+                    <h1 class="text-2xl font-serif font-bold text-gray-900">
+                        Relax<span class="text-primary-600">Spa</span>
+                    </h1>
+                    <p class="text-xs text-gray-500">Centro de Bienestar</p>
+                </div>
+            </NavLink>
+
+            @* Navigation Desktop *@
+            <div class="hidden lg:block">
+                <NavMenu />
+            </div>
+
+            @* CTA Button Desktop *@
+            <div class="hidden lg:block">
+                <NavLink href="booking">
+                    <button class="btn-primary">
+                        Reservar Cita
+                    </button>
+                </NavLink>
+            </div>
+
+            @* Mobile Menu Button *@
+            <button @onclick="ToggleMobileMenu"
+                    class="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                    aria-label="Toggle menu">
+                @if (_isMobileMenuOpen)
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x text-gray-700"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                }
+                else
+                {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu text-gray-700"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+                }
+            </button>
+        </div>
+    </div>
+</header>
+
+@* Mobile Menu *@
+<div class="fixed inset-0 z-30 lg:hidden transition-all duration-300 @(_isMobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none")">
+    @* Overlay *@
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @onclick="CloseMobileMenu"></div>
+    
+    @* Menu Panel *@
+    <div class="absolute top-0 right-0 w-full max-w-sm h-full bg-white shadow-2xl transform transition-transform duration-300 @(_isMobileMenuOpen ? "translate-x-0" : "translate-x-full")">
+        <div class="p-6">
+            @* Close Button *@
+            <div class="flex justify-end mb-6">
+                <button @onclick="CloseMobileMenu" class="p-2 rounded-lg hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+
+            @* Mobile Navigation *@
+            <NavMenu Mobile="true" OnClickCallback="CloseMobileMenu" />
+
+            @* Mobile CTA *@
+            <div class="mt-8">
+                <NavLink href="booking" class="block" @onclick="CloseMobileMenu">
+                    <button class="btn-primary w-full">
+                        Reservar Cita
+                    </button>
+                </NavLink>
+            </div>
+
+            @* Mobile Contact Info *@
+            <div class="mt-8 pt-8 border-t border-gray-200 space-y-4">
+                <a href="tel:+18095551234" class="flex items-center gap-3 text-gray-700 hover:text-primary-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    <span>(809) 555-1234</span>
+                </a>
+                <a href="mailto:info@relaxspa.com" class="flex items-center gap-3 text-gray-700 hover:text-primary-600 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    <span>info@relaxspa.com</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool _isScrolled;
+    private bool _isMobileMenuOpen;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("window.addEventListener", "scroll", DotNetObjectReference.Create(this));
+        }
+    }
+
+    [JSInvokable]
+    public void OnScroll()
+    {
+        // Simple implementation - in a real app, optimize this to avoid too many renders
+        // or use a JS interop function to check scrollY and update a CSS class
+    }
+
+    private void ToggleMobileMenu()
+    {
+        _isMobileMenuOpen = !_isMobileMenuOpen;
+    }
+
+    private void CloseMobileMenu()
+    {
+        _isMobileMenuOpen = false;
+    }
+}
