@@ -1,0 +1,107 @@
+@page "/services"
+@using spa_reservas_blazor.Models
+@using spa_reservas_blazor.Services
+@using spa_reservas_blazor.Components.Shared
+@inject IBookingService BookingService
+
+<PageTitle>Nuestros Servicios - RelaxSpa</PageTitle>
+
+<div class="min-h-screen bg-sage-50 py-12">
+    <div class="container-custom">
+        
+        @* Header *@
+        <div class="text-center mb-16 animate-fadeIn">
+            <span class="inline-block px-4 py-2 bg-white text-sage-700 rounded-full text-sm font-medium shadow-sm mb-4">
+                Menú de Tratamientos
+            </span>
+            <h1 class="text-4xl md:text-5xl font-serif font-bold text-gray-900 mb-6">
+                Descubre tu momento de paz
+            </h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Cada tratamiento está diseñado para proporcionarte una experiencia única 
+                de relajación y renovación.
+            </p>
+        </div>
+
+        @* Categorías *@
+        <div class="flex flex-wrap justify-center gap-4 mb-12 animate-fadeIn">
+            @foreach (var category in Categories)
+            {
+                <button @onclick="() => FilterByCategory(category.id)"
+                        class="px-6 py-3 rounded-full font-medium transition-all duration-300 @(SelectedCategory == category.id ? "bg-primary-600 text-white shadow-lg scale-105" : "bg-white text-gray-600 hover:bg-white/80 hover:shadow-md")">
+                    @category.label
+                </button>
+            }
+        </div>
+
+        @* Grid de Servicios *@
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 animate-slideUp">
+            @foreach (var service in FilteredServices)
+            {
+                <ServiceCard Service="service" />
+            }
+        </div>
+
+        @* Empty State *@
+        @if (!FilteredServices.Any())
+        {
+            <div class="text-center py-20">
+                <p class="text-gray-500 text-lg">No se encontraron servicios en esta categoría.</p>
+                <button @onclick="() => FilterByCategory(ALL_CATEGORY)" class="mt-4 text-primary-600 font-medium hover:underline">
+                    Ver todos los servicios
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private const string ALL_CATEGORY = "all";
+    private string SelectedCategory = ALL_CATEGORY;
+    private List<Service> AllServices = new();
+    private List<Service> FilteredServices = new();
+
+    private List<(string id, string label)> Categories = new()
+    {
+        (ALL_CATEGORY, "Todos"),
+        ("Masajes", "Masajes"),
+        ("Faciales", "Faciales"),
+        ("Corporales", "Corporales"),
+        ("Spa", "Spa y Bienestar")
+    };
+
+    protected override void OnInitialized()
+    {
+        // Simular carga de datos
+        AllServices = new List<Service>
+        {
+            new Service { Id = "1", Name = "Masaje Relajante", Category = "Masajes", Price = 60, Duration = 60, Description = "Masaje suave para aliviar estrés con aceites esenciales.", ImageUrl = "" },
+            new Service { Id = "2", Name = "Masaje de Tejido Profundo", Category = "Masajes", Price = 75, Duration = 60, Description = "Terapia intensa para aliviar tensión muscular crónica.", ImageUrl = "" },
+            new Service { Id = "3", Name = "Piedras Calientes", Category = "Masajes", Price = 85, Duration = 75, Description = "El calor de las piedras volcánicas derrite la tensión.", ImageUrl = "" },
+            
+            new Service { Id = "4", Name = "Facial Rejuvenecedor", Category = "Faciales", Price = 80, Duration = 50, Description = "Limpieza profunda e hidratación para una piel radiante.", ImageUrl = "" },
+            new Service { Id = "5", Name = "Facial Anti-Edad", Category = "Faciales", Price = 95, Duration = 60, Description = "Tratamiento intensivo con colágeno y vitamina C.", ImageUrl = "" },
+            
+            new Service { Id = "6", Name = "Exfoliación Corporal", Category = "Corporales", Price = 55, Duration = 45, Description = "Renueva tu piel con sales marinas y aceites hidratantes.", ImageUrl = "" },
+            new Service { Id = "7", Name = "Envoltura de Algas", Category = "Corporales", Price = 70, Duration = 60, Description = "Detoxifica y remineraliza tu cuerpo.", ImageUrl = "" },
+            
+            new Service { Id = "8", Name = "Circuito Hidroterapia", Category = "Spa", Price = 45, Duration = 90, Description = "Acceso a piscinas, sauna y jacuzzi por 90 minutos.", ImageUrl = "" },
+            new Service { Id = "9", Name = "Ritual Parejas", Category = "Spa", Price = 150, Duration = 90, Description = "Experiencia compartida con masajes y jacuzzi privado.", ImageUrl = "" }
+        };
+        
+        FilterByCategory(ALL_CATEGORY);
+    }
+
+    private void FilterByCategory(string category)
+    {
+        SelectedCategory = category;
+        if (category == ALL_CATEGORY)
+        {
+            FilteredServices = AllServices;
+        }
+        else
+        {
+            FilteredServices = AllServices.Where(s => s.Category == category).ToList();
+        }
+    }
+}
