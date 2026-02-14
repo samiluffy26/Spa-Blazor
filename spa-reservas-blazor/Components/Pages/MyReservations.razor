@@ -1,0 +1,155 @@
+@page "/my-reservations"
+@using spa_reservas_blazor.Models
+@using spa_reservas_blazor.Services
+@inject IBookingService BookingService
+@inject IJSRuntime JSRuntime
+@rendermode InteractiveAuto
+
+<PageTitle>Mis Reservas - RelaxSpa</PageTitle>
+
+<div class="min-h-screen bg-sage-50 py-12">
+    <div class="container-custom max-w-4xl">
+        
+        <div class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-serif font-bold text-gray-900 mb-4">
+                Mis Reservas
+            </h1>
+            <p class="text-gray-600">
+                Gestiona tus citas próximas y revisa tu historial
+            </p>
+        </div>
+
+        @if (BookingService.IsLoading)
+        {
+            <div class="flex justify-center py-20">
+                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+            </div>
+        }
+        else if (!MyBookings.Any())
+        {
+            <div class="bg-white rounded-3xl shadow-sm p-12 text-center animate-fadeIn">
+                <div class="w-20 h-20 bg-sage-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-x text-sage-400"><path d="M8 2v4"/><path d="M16 2v4"/><path d="M21 17V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11"/><path d="M3 10h18"/><path d="m14 2 4 4"/><path d="m18 2-4 4"/></svg>
+                </div>
+                <h2 class="text-xl font-serif font-semibold text-gray-900 mb-2">
+                    No tienes reservas activas
+                </h2>
+                <p class="text-gray-600 mb-8">
+                    ¿Te apetece un momento de relax? Reserva tu cita ahora.
+                </p>
+                <NavLink href="booking">
+                    <button class="btn-primary">
+                        Nueva Reserva
+                    </button>
+                </NavLink>
+            </div>
+        }
+        else
+        {
+            <div class="space-y-6 animate-slideUp">
+                @foreach (var booking in MyBookings.OrderByDescending(b => b.Date))
+                {
+                    <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow overflow-hidden border border-gray-100">
+                        <div class="p-6">
+                            <div class="flex flex-col md:flex-row justify-between gap-4">
+                                
+                                @* Info Principal *@
+                                <div class="flex items-start gap-4">
+                                    <div class="w-16 h-16 bg-primary-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles text-primary-600"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                                    </div>
+                                    <div>
+                                        <div class="flex items-center gap-3 mb-1">
+                                            <h3 class="font-bold text-lg text-gray-900">
+                                                @booking.ServiceName
+                                            </h3>
+                                            <span class="px-3 py-1 rounded-full text-xs font-medium @GetStatusClass(booking.Status)">
+                                                @GetStatusLabel(booking.Status)
+                                            </span>
+                                        </div>
+                                        <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-600">
+                                            <div class="flex items-center gap-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                                                <span class="capitalize">@booking.Date.ToString("dddd, dd MMMM yyyy")</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                                <span>@booking.Time.ToString("hh:mm tt") (@booking.ServiceDuration min)</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 font-medium text-primary-700">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-dollar-sign"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                                                <span>$@booking.ServicePrice</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @* Acciones *@
+                                <div class="flex items-center gap-3">
+                                    @if (booking.Status != BookingStatus.Cancelled && booking.Status != BookingStatus.Completed)
+                                    {
+                                        <button @onclick="() => CancelBooking(booking.Id)" 
+                                                class="px-4 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors">
+                                            Cancelar
+                                        </button>
+                                         @* Botón Reprogramar (placeholder logic) *@
+                                        <button class="px-4 py-2 text-sm font-medium text-primary-700 bg-primary-50 hover:bg-primary-100 rounded-lg transition-colors">
+                                            Reprogramar
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<Booking> MyBookings => BookingService.Bookings;
+
+    protected override void OnInitialized()
+    {
+        BookingService.OnChange += StateHasChanged;
+    }
+
+    private string GetStatusClass(BookingStatus status)
+    {
+        return status switch
+        {
+            BookingStatus.Confirmed => "bg-green-100 text-green-700",
+            BookingStatus.Pending => "bg-yellow-100 text-yellow-700",
+            BookingStatus.Cancelled => "bg-red-100 text-red-700",
+            BookingStatus.Completed => "bg-gray-100 text-gray-700",
+            _ => "bg-gray-100 text-gray-700"
+        };
+    }
+
+    private string GetStatusLabel(BookingStatus status)
+    {
+        return status switch
+        {
+            BookingStatus.Confirmed => "Confirmada",
+            BookingStatus.Pending => "Pendiente",
+            BookingStatus.Cancelled => "Cancelada",
+            BookingStatus.Completed => "Completada",
+            _ => status.ToString()
+        };
+    }
+
+    private async Task CancelBooking(string id)
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "¿Estás seguro que deseas cancelar esta reserva?");
+        if (confirmed)
+        {
+            await BookingService.CancelBookingAsync(id);
+        }
+    }
+
+    public void Dispose()
+    {
+        BookingService.OnChange -= StateHasChanged;
+    }
+}
