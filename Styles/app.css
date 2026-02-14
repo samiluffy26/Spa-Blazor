@@ -1,0 +1,109 @@
+@import "tailwindcss";
+@source "../**/*.{razor,html,cshtml}";
+
+@theme {
+    --color-primary-50: #f0f9f4;
+    --color-primary-100: #dcf2e4;
+    --color-primary-200: #bae6cd;
+    --color-primary-300: #88d4ab;
+    --color-primary-400: #52ba82;
+    --color-primary-500: #2d9d63;
+    --color-primary-600: #1f7f4f;
+    --color-primary-700: #1a6540;
+    --color-primary-800: #175034;
+    --color-primary-900: #14422c;
+
+    --color-sage-50: #f6f7f4;
+    --color-sage-100: #e8ebe3;
+    --color-sage-200: #d1d7c8;
+    --color-sage-300: #b0bca3;
+    --color-sage-400: #8d9d7b;
+    --color-sage-500: #6f825e;
+    --color-sage-600: #576749;
+    --color-sage-700: #45523b;
+    --color-sage-800: #384332;
+    --color-sage-900: #30382b;
+
+    --font-family-serif: Georgia, serif;
+}
+
+@layer base {
+    body {
+        @apply bg-white text-gray-900 font-sans antialiased;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-serif;
+    }
+}
+
+@layer components {
+    .container-custom {
+        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    }
+
+    .btn-primary {
+        @apply bg-primary-600 text-white px-6 py-3 rounded-full hover:bg-primary-700 transition-all duration-300 font-medium shadow-sm hover:shadow-md cursor-pointer;
+    }
+
+    .btn-secondary {
+        @apply bg-sage-100 text-sage-800 px-6 py-3 rounded-full hover:bg-sage-200 transition-all duration-300 font-medium cursor-pointer;
+    }
+
+    .card-spa {
+        @apply bg-white rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden;
+    }
+}
+
+@layer utilities {
+    .animate-fadeIn {
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .animate-slideUp {
+        animation: slideUp 0.3s ease-out;
+    }
+
+    .animate-slideDown {
+        animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideDown {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "spa-reservas-blazor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:css": "npx @tailwindcss/cli -i ./Styles/app.css -o ./wwwroot/app.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samiluffy26/Spa-Blazor.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/samiluffy26/Spa-Blazor/issues"
+  },
+  "homepage": "https://github.com/samiluffy26/Spa-Blazor#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.1.18",
+    "autoprefixer": "^10.4.24",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.18"
+  }
+}
