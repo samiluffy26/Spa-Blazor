@@ -1,5 +1,7 @@
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
+@inject spa_reservas_blazor.Client.Auth.IAuthService AuthService
+@using Microsoft.AspNetCore.Components.Authorization
 @rendermode InteractiveAuto
 
 @* Top Bar - Info de contacto *@
@@ -47,12 +49,32 @@
             </div>
 
             @* CTA Button Desktop *@
-            <div class="hidden lg:block">
-                <NavLink href="booking">
-                    <button class="btn-primary">
-                        Reservar Cita
-                    </button>
-                </NavLink>
+            @* CTA Button Desktop & Auth *@
+            <div class="hidden lg:flex items-center gap-4">
+                <AuthorizeView>
+                    <Authorized>
+                        <span class="text-sm font-medium text-gray-700">Hola, @context.User.Identity?.Name</span>
+                        <button @onclick="Logout" class="text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors">
+                            Cerrar Sesión
+                        </button>
+                        @if (context.User.IsInRole("Admin"))
+                        {
+                             <NavLink href="admin/dashboard" class="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
+                                Panel Admin
+                            </NavLink>
+                        }
+                    </Authorized>
+                    <NotAuthorized>
+                        <NavLink href="login" class="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
+                            Iniciar Sesión
+                        </NavLink>
+                        <NavLink href="booking">
+                            <button class="btn-primary">
+                                Reservar Cita
+                            </button>
+                        </NavLink>
+                    </NotAuthorized>
+                </AuthorizeView>
             </div>
 
             @* Mobile Menu Button *@
@@ -91,12 +113,36 @@
             <NavMenu Mobile="true" OnClickCallback="CloseMobileMenu" />
 
             @* Mobile CTA *@
-            <div class="mt-8">
-                <NavLink href="booking" class="block" @onclick="CloseMobileMenu">
-                    <button class="btn-primary w-full">
-                        Reservar Cita
-                    </button>
-                </NavLink>
+            @* Mobile CTA *@
+            <div class="mt-8 space-y-4">
+                <AuthorizeView>
+                    <Authorized>
+                         <div class="px-4 py-2 bg-gray-50 rounded-lg">
+                            <span class="block text-sm font-medium text-gray-900">Hola, @context.User.Identity?.Name</span>
+                             @if (context.User.IsInRole("Admin"))
+                            {
+                                <NavLink href="admin/dashboard" class="block text-sm text-primary-600 mt-1" @onclick="CloseMobileMenu">
+                                    Ir al Panel Admin
+                                </NavLink>
+                            }
+                        </div>
+                        <button @onclick="Logout" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                            Cerrar Sesión
+                        </button>
+                    </Authorized>
+                    <NotAuthorized>
+                         <NavLink href="login" class="block" @onclick="CloseMobileMenu">
+                            <button class="w-full px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50">
+                                Iniciar Sesión
+                            </button>
+                        </NavLink>
+                        <NavLink href="booking" class="block" @onclick="CloseMobileMenu">
+                            <button class="btn-primary w-full">
+                                Reservar Cita
+                            </button>
+                        </NavLink>
+                    </NotAuthorized>
+                </AuthorizeView>
             </div>
 
             @* Mobile Contact Info *@
@@ -136,6 +182,12 @@
     private void ToggleMobileMenu()
     {
         _isMobileMenuOpen = !_isMobileMenuOpen;
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.Logout();
+        Navigation.NavigateTo("/");
     }
 
     private void CloseMobileMenu()

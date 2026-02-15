@@ -1450,6 +1450,13 @@
       }
     }
   }
+  .hover\:text-primary-700 {
+    &:hover {
+      @media (hover: hover) {
+        color: var(--color-primary-700);
+      }
+    }
+  }
   .hover\:text-red-700 {
     &:hover {
       @media (hover: hover) {
@@ -1614,6 +1621,11 @@
   .lg\:block {
     @media (width >= 64rem) {
       display: block;
+    }
+  }
+  .lg\:flex {
+    @media (width >= 64rem) {
+      display: flex;
     }
   }
   .lg\:hidden {

@@ -1,0 +1,28 @@
+@inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Components.Authorization
+@code {
+    [CascadingParameter] private Task<AuthenticationState> AuthState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthState;
+        if (authState?.User?.Identity is null || !authState.User.Identity.IsAuthenticated)
+        {
+            var returnUrl = Navigation.Uri;
+             // Check if it's admin path to redirect to admin login
+            if (Data.IsAdminPath(returnUrl))
+            {
+                 Navigation.NavigateTo($"admin/login?returnUrl={Uri.EscapeDataString(returnUrl)}");
+            }
+            else
+            {
+                 Navigation.NavigateTo($"login?returnUrl={Uri.EscapeDataString(returnUrl)}");
+            }
+        }
+    }
+    
+    // Simple helper class or logic
+    private static class Data {
+        public static bool IsAdminPath(string url) => url.Contains("/admin") && !url.Contains("/login");
+    }
+}
