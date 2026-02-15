@@ -60,6 +60,7 @@
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
+    --tracking-wide: 0.025em;
     --leading-tight: 1.25;
     --leading-relaxed: 1.625;
     --radius-md: 0.375rem;
@@ -420,6 +421,9 @@
   .h-full {
     height: 100%;
   }
+  .h-screen {
+    height: 100vh;
+  }
   .max-h-\[400px\] {
     max-height: 400px;
   }
@@ -452,6 +456,9 @@
   }
   .w-20 {
     width: calc(var(--spacing) * 20);
+  }
+  .w-64 {
+    width: calc(var(--spacing) * 64);
   }
   .w-full {
     width: 100%;
@@ -883,6 +890,9 @@
   .text-center {
     text-align: center;
   }
+  .font-sans {
+    font-family: var(--font-sans);
+  }
   .font-serif {
     font-family: var(--font-serif);
   }
@@ -938,6 +948,10 @@
     --tw-font-weight: var(--font-weight-semibold);
     font-weight: var(--font-weight-semibold);
   }
+  .tracking-wide {
+    --tw-tracking: var(--tracking-wide);
+    letter-spacing: var(--tracking-wide);
+  }
   .text-gray-400 {
     color: var(--color-gray-400);
   }
@@ -979,6 +993,9 @@
   }
   .text-red-700 {
     color: var(--color-red-700);
+  }
+  .text-sage-100 {
+    color: var(--color-sage-100);
   }
   .text-sage-200 {
     color: var(--color-sage-200);
@@ -1206,6 +1223,13 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-red-100);
+      }
+    }
+  }
+  .hover\:bg-sage-800 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-sage-800);
       }
     }
   }
@@ -1653,6 +1677,10 @@
   syntax: "*";
   inherits: false;
 }
+@property --tw-tracking {
+  syntax: "*";
+  inherits: false;
+}
 @property --tw-shadow {
   syntax: "*";
   inherits: false;
@@ -1800,6 +1828,7 @@
       --tw-gradient-to-position: 100%;
       --tw-leading: initial;
       --tw-font-weight: initial;
+      --tw-tracking: initial;
       --tw-shadow: 0 0 #0000;
       --tw-shadow-color: initial;
       --tw-shadow-alpha: 100%;

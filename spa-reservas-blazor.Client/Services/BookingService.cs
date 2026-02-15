@@ -31,6 +31,20 @@ public interface IBookingService
     Task<List<Service>> GetServicesAsync();
     Task<Service?> GetServiceByIdAsync(string id);
     
+    // Admin Methods
+    Task CreateServiceAsync(Service service);
+    Task UpdateServiceAsync(Service service);
+    Task DeleteServiceAsync(string id);
+    
+    Task<List<Category>> GetCategoriesAsync();
+    Task CreateCategoryAsync(Category category);
+    Task DeleteCategoryAsync(string id);
+    
+    Task<AppSettings> GetSettingsAsync();
+    Task UpdateSettingsAsync(AppSettings settings);
+    
+    Task<string> UploadImageAsync(MultipartFormDataContent content);
+
     event Action OnChange;
 }
 
@@ -212,4 +226,58 @@ public class BookingService : IBookingService
             return null;
         }
     }
+
+    // ADMIN IMPLEMENTATION
+    public async Task CreateServiceAsync(Service service)
+    {
+        await _http.PostAsJsonAsync("api/services", service);
+    }
+
+    public async Task UpdateServiceAsync(Service service)
+    {
+        await _http.PutAsJsonAsync($"api/services/{service.Id}", service);
+    }
+
+    public async Task DeleteServiceAsync(string id)
+    {
+        await _http.DeleteAsync($"api/services/{id}");
+    }
+
+    public async Task<List<Category>> GetCategoriesAsync()
+    {
+        return await _http.GetFromJsonAsync<List<Category>>("api/admin/categories") ?? new();
+    }
+
+    public async Task CreateCategoryAsync(Category category)
+    {
+        await _http.PostAsJsonAsync("api/admin/categories", category);
+    }
+
+    public async Task DeleteCategoryAsync(string id)
+    {
+        await _http.DeleteAsync($"api/admin/categories/{id}");
+    }
+
+    public async Task<AppSettings> GetSettingsAsync()
+    {
+        return await _http.GetFromJsonAsync<AppSettings>("api/admin/settings") ?? new AppSettings();
+    }
+
+    public async Task UpdateSettingsAsync(AppSettings settings)
+    {
+        await _http.PostAsJsonAsync("api/admin/settings", settings);
+    }
+
+    public async Task<string> UploadImageAsync(MultipartFormDataContent content)
+    {
+        var response = await _http.PostAsync("api/admin/upload", content);
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<UploadResult>();
+            return result?.Url ?? string.Empty;
+        }
+        return string.Empty;
+    }
+
+    private class UploadResult { public string Url { get; set; } }
 }
