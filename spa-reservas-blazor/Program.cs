@@ -96,6 +96,22 @@ else
 
 app.UseHttpsRedirection();
 
+// Header Debugging Middleware
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/api"))
+    {
+        var authHeader = context.Request.Headers["Authorization"].ToString();
+        if (!string.IsNullOrEmpty(authHeader))
+        {
+            Console.WriteLine($"[AuthDebug] Received Header: {authHeader}");
+            var bytes = System.Text.Encoding.UTF8.GetBytes(authHeader);
+            Console.WriteLine($"[AuthDebug] Header Bytes: {BitConverter.ToString(bytes)}");
+        }
+    }
+    await next();
+});
+
 app.UseAntiforgery();
 app.UseAuthentication();
 app.UseAuthorization();
