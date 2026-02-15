@@ -55,9 +55,15 @@ public class AdminController : ControllerBase
         var allUsers = await _userRepository.GetAllAsync();
         var newClientsMonth = allUsers.Count(u => u.CreatedAt >= DateTime.UtcNow.AddMonths(-1) && u.Role == "Client");
 
+        // 5. Ajustes y Capacidad
+        var settings = await _settingRepository.GetSettingsAsync();
+
         return Ok(new DashboardStats
         {
             BookingsToday = bookingsToday,
+            MaxDailyBookings = settings.MaxDailyBookings,
+            OpeningTime = DateTime.Today.Add(settings.OpeningTime).ToString("HH:mm"),
+            ClosingTime = DateTime.Today.Add(settings.ClosingTime).ToString("HH:mm"),
             RevenueMonth = revenueMonth,
             ActiveServices = activeServices,
             NewClientsMonth = newClientsMonth
