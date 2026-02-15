@@ -389,6 +389,10 @@
             "Microsoft.AspNetCore.Components.WebAssembly.Server": {
               "target": "Package",
               "version": "[9.0.8, )"
+            },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[8.16.0, )"
             }
           },
           "imports": [

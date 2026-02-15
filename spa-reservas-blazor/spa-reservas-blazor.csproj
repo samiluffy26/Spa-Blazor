@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.16.0" />
     <ProjectReference Include="..\spa-reservas-blazor.Client\spa-reservas-blazor.Client.csproj" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.8" />
   </ItemGroup>
