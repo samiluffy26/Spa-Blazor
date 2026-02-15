@@ -15,6 +15,27 @@ public class BookingsController : ControllerBase
          _bookingService = bookingService;
     }
 
+    [HttpGet]
+    public async Task<ActionResult<List<Booking>>> GetAllBookings()
+    {
+        return Ok(await _bookingService.GetAllBookingsAsync());
+    }
+
+    [HttpGet("my")]
+    [Microsoft.AspNetCore.Authorization.Authorize]
+    public async Task<ActionResult<List<Booking>>> GetMyBookings()
+    {
+        var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value 
+                    ?? User.FindFirst("email")?.Value;
+        
+        if (string.IsNullOrEmpty(email))
+        {
+            return BadRequest("User email not found in token.");
+        }
+
+        return Ok(await _bookingService.GetBookingsByEmailAsync(email));
+    }
+
     [HttpPost]
     public async Task<ActionResult<Booking>> CreateBooking(Booking booking)
     {

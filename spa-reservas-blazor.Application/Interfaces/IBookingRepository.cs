@@ -10,5 +10,6 @@ public interface IBookingRepository
     Task<List<Booking>> GetByStatusAsync(BookingStatus status);
     Task UpdateAsync(Booking booking);
     Task DeleteAsync(string id);
+    Task<List<Booking>> GetByEmailAsync(string email);
     Task<bool> IsTimeSlotAvailableAsync(DateOnly date, TimeOnly time);
 }

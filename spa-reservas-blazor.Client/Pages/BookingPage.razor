@@ -1,8 +1,11 @@
 @page "/booking"
 @using spa_reservas_blazor.Shared.Entities
 @using spa_reservas_blazor.Services
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Components.Authorization
 @inject IBookingService BookingService
 @inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthStateProvider
 @rendermode InteractiveAuto
 
 <PageTitle>Reservar Cita - RelaxSpa</PageTitle>
@@ -152,17 +155,34 @@
                                 @* No usamos DataAnnotationsValidator porque el modelo original no tenía validaciones, las agregamos manual o asumimos simples *@
                                 
                                 <div class="space-y-4">
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
-                                        <InputText class="w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" 
-                                                   @bind-Value="BookingService.CurrentBooking.CustomerName" required />
-                                    </div>
+                                    <AuthorizeView Context="authContext">
+                                        <NotAuthorized>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
+                                                <InputText class="w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" 
+                                                        @bind-Value="BookingService.CurrentBooking.CustomerName" required />
+                                            </div>
 
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                        <InputText type="email" class="w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" 
-                                                   @bind-Value="BookingService.CurrentBooking.CustomerEmail" required />
-                                    </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                                <InputText type="email" class="w-full rounded-xl border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" 
+                                                        @bind-Value="BookingService.CurrentBooking.CustomerEmail" required />
+                                            </div>
+                                        </NotAuthorized>
+                                        <Authorized>
+                                            <div class="p-4 bg-sage-50 rounded-xl border border-sage-100 mb-4">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-10 h-10 bg-sage-200 rounded-full flex items-center justify-center text-sage-700 font-bold">
+                                                        @(authContext.User.Identity?.Name?[0].ToString().ToUpper() ?? "?")
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-medium text-gray-900">@authContext.User.Identity?.Name</p>
+                                                        <p class="text-xs text-gray-500">Reservando como usuario identificado</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </Authorized>
+                                    </AuthorizeView>
 
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 mb-1">Teléfono</label>
@@ -230,6 +250,17 @@
     {
         // Cargar servicios desde el servicio centralizado
         Services = await BookingService.GetServicesAsync();
+
+        // Autocompletar datos si el usuario está logueado
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity?.IsAuthenticated ?? false)
+        {
+            BookingService.CurrentBooking.CustomerName = user.Identity.Name ?? "";
+            // El email suele venir en el claim "email" o "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"
+            BookingService.CurrentBooking.CustomerEmail = user.FindFirst(c => c.Type == ClaimTypes.Email || c.Type == "email")?.Value ?? "";
+        }
 
         // Si hay un ServiceId en la URL, seleccionarlo
         if (!string.IsNullOrEmpty(ServiceId))
@@ -340,7 +371,7 @@
     private async Task HandleSubmit()
     {
         await BookingService.CreateBookingAsync(BookingService.CurrentBooking);
-        Navigation.NavigateTo("my-reservations");
+        Navigation.NavigateTo("my-bookings");
     }
 
     public void Dispose()

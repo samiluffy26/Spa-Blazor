@@ -20,6 +20,8 @@ public interface IBookingService
     Task<Booking> CreateBookingAsync(Booking booking);
     Task CancelBookingAsync(string bookingId);
     Task RescheduleBookingAsync(string bookingId, DateOnly newDate, TimeOnly newTime);
+    Task<List<Booking>> GetAllBookingsAsync();
+    Task<List<Booking>> GetMyBookingsAsync();
     
     Booking? GetBookingById(string id);
     List<Booking> GetBookingsByStatus(BookingStatus status);
@@ -176,6 +178,33 @@ public class BookingService : IBookingService
              IsLoading = false;
              NotifyStateChanged();
          }
+    }
+
+    public async Task<List<Booking>> GetAllBookingsAsync()
+    {
+        try 
+        {
+            return await _http.GetFromJsonAsync<List<Booking>>("api/bookings") ?? new();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching all bookings");
+            return new();
+        }
+    }
+
+    public async Task<List<Booking>> GetMyBookingsAsync()
+    {
+        try 
+        {
+            var myBookings = await _http.GetFromJsonAsync<List<Booking>>("api/bookings/my");
+            return myBookings ?? new();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching my bookings");
+            return new();
+        }
     }
 
     public Booking? GetBookingById(string id) => Bookings.FirstOrDefault(b => b.Id == id);

@@ -35,6 +35,11 @@ public class BookingRepository : IBookingRepository
         return await _context.Bookings.Find(b => b.Status == status).ToListAsync();
     }
 
+    public async Task<List<Booking>> GetByEmailAsync(string email)
+    {
+        return await _context.Bookings.Find(b => b.CustomerEmail == email).ToListAsync();
+    }
+
     public async Task UpdateAsync(Booking booking)
     {
         await _context.Bookings.ReplaceOneAsync(b => b.Id == booking.Id, booking);

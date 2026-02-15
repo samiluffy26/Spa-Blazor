@@ -90,6 +90,14 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             {
                 key = ClaimTypes.Role;
             }
+            else if (key == "email" || key == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")
+            {
+                key = ClaimTypes.Email;
+            }
+            else if (key == "unique_name" || key == "nameid" || key == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
+            {
+                key = ClaimTypes.NameIdentifier;
+            }
 
             claims.Add(new Claim(key, value));
         }

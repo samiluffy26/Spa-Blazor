@@ -41,6 +41,16 @@ public class BookingService : IBookingService
     {
         return await _bookingRepository.GetByStatusAsync(status);
     }
+
+    public async Task<List<Booking>> GetAllBookingsAsync()
+    {
+        return await _bookingRepository.GetAllAsync();
+    }
+
+    public async Task<List<Booking>> GetBookingsByEmailAsync(string email)
+    {
+        return await _bookingRepository.GetByEmailAsync(email);
+    }
     
     public async Task<Booking?> GetBookingByIdAsync(string id)
     {
