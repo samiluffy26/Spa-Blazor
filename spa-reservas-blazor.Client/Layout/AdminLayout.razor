@@ -1,5 +1,7 @@
 @inherits LayoutComponentBase
 @using spa_reservas_blazor.Client.Layout
+@inject spa_reservas_blazor.Client.Auth.IAuthService AuthService
+@inject NavigationManager Navigation
 
 <div class="flex h-screen bg-gray-100 font-sans">
     
@@ -61,3 +63,11 @@
         </AuthorizeView>
     </main>
 </div>
+
+@code {
+    private async Task Logout()
+    {
+        await AuthService.Logout();
+        Navigation.NavigateTo("/login");
+    }
+}
