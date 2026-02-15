@@ -48,6 +48,7 @@ builder.Services.AddScoped<spa_reservas_blazor.Services.IBookingService, spa_res
 
 
 // Auth
+builder.Services.AddScoped<spa_reservas_blazor.Client.Auth.IAuthService, spa_reservas_blazor.Services.ServerAuthService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
