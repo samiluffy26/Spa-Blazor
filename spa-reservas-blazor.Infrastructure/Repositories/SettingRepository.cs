@@ -12,7 +12,7 @@ public class SettingRepository : ISettingRepository
 
     public SettingRepository(MongoDbContext context)
     {
-        _settings = context.Database.GetCollection<AppSettings>("Settings");
+        _settings = context.Settings;
     }
 
     public async Task<AppSettings> GetSettingsAsync()

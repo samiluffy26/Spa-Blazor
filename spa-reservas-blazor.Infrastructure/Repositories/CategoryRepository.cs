@@ -13,7 +13,7 @@ public class CategoryRepository : ICategoryRepository
 
     public CategoryRepository(MongoDbContext context)
     {
-        _categories = context.Database.GetCollection<Category>("Categories");
+        _categories = context.Categories;
     }
 
     public async Task<IEnumerable<Category>> GetAllAsync()

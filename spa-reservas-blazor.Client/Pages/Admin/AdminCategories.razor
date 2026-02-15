@@ -62,6 +62,8 @@
     </div>
 </div>
 
+@inject IJSRuntime JSRuntime
+
 @code {
     private List<Category> Categories = new();
     private Category NewCategory = new();
@@ -87,7 +89,7 @@
 
     private async Task HandleDelete(string id)
     {
-        if (confirm("¿Estás seguro de eliminar esta categoría?")) // Nota: confirm es JS, Blazor necesita interop o modal custom. Por simplicidad aquí asumimos directo o omitimos confirmación real por ahora.
+        if (await JSRuntime.InvokeAsync<bool>("confirm", "¿Estás seguro de eliminar esta categoría?"))
         {
              await BookingService.DeleteCategoryAsync(id);
              await LoadCategories();
