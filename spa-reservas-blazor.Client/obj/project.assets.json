@@ -2024,11 +2024,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Client\\spa-reservas-blazor.Client.csproj",
+      "projectUniqueName": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Client\\spa-reservas-blazor.Client.csproj",
       "projectName": "spa-reservas-blazor.Client",
-      "projectPath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Client\\spa-reservas-blazor.Client.csproj",
+      "projectPath": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Client\\spa-reservas-blazor.Client.csproj",
       "packagesPath": "C:\\Users\\samue\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Client\\obj\\",
+      "outputPath": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Client\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -2050,8 +2050,8 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Shared\\spa-reservas-blazor.Shared.csproj": {
-              "projectPath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Shared\\spa-reservas-blazor.Shared.csproj"
+            "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Shared\\spa-reservas-blazor.Shared.csproj": {
+              "projectPath": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Shared\\spa-reservas-blazor.Shared.csproj"
             }
           }
         }

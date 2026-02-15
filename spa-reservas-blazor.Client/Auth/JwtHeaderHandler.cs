@@ -14,22 +14,30 @@ public class JwtHeaderHandler : DelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        // Don't add header for auth endpoints
         var isAuthEndpoint = request.RequestUri?.AbsolutePath.Contains("/api/auth/") ?? false;
         
         if (!isAuthEndpoint)
         {
             try 
             {
+                // DEBUG LOGGING
+                Console.WriteLine($"[JwtHandler] Intercepting request to: {request.RequestUri}");
+                
                 var token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+                
                 if (!string.IsNullOrEmpty(token))
                 {
+                    Console.WriteLine("[JwtHandler] Token found in localStorage, attaching to header.");
                     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 }
+                else
+                {
+                    Console.WriteLine("[JwtHandler] NO token found in localStorage.");
+                }
             }
-            catch 
+            catch (Exception ex)
             {
-                // JavaScript interop might fail during pre-rendering or early initialization
+                Console.WriteLine($"[JwtHandler] Error reading from localStorage: {ex.Message}");
             }
         }
 

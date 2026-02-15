@@ -117,9 +117,20 @@
     private List<Booking> myBookings = new();
     private bool isLoading = true;
 
+    [CascadingParameter]
+    private Task<AuthenticationState> authStateTask { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        await LoadMyBookings();
+        var authState = await authStateTask;
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            await LoadMyBookings();
+        }
+        else
+        {
+            isLoading = false;
+        }
     }
 
     private async Task LoadMyBookings()
