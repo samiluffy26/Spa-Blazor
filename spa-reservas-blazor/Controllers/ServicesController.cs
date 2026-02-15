@@ -20,4 +20,18 @@ public class ServicesController : ControllerBase
     {
         return Ok(await _bookingService.GetServicesAsync());
     }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Service>> GetService(string id)
+    {
+        var services = await _bookingService.GetServicesAsync();
+        var service = services.FirstOrDefault(s => s.Id == id);
+        
+        if (service == null)
+        {
+            return NotFound();
+        }
+        
+        return Ok(service);
+    }
 }
