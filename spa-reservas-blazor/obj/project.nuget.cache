@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "YwMJPLJExhc=",
+  "dgSpecHash": "vpJi41w6thg=",
   "success": true,
   "projectFilePath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor\\spa-reservas-blazor.csproj",
   "expectedPackageFiles": [
@@ -8,6 +8,7 @@
     "C:\\Users\\samue\\.nuget\\packages\\microsoft.aspnetcore.authorization\\9.0.8\\microsoft.aspnetcore.authorization.9.0.8.nupkg.sha512",
     "C:\\Users\\samue\\.nuget\\packages\\microsoft.aspnetcore.components\\9.0.8\\microsoft.aspnetcore.components.9.0.8.nupkg.sha512",
     "C:\\Users\\samue\\.nuget\\packages\\microsoft.aspnetcore.components.analyzers\\9.0.8\\microsoft.aspnetcore.components.analyzers.9.0.8.nupkg.sha512",
+    "C:\\Users\\samue\\.nuget\\packages\\microsoft.aspnetcore.components.authorization\\9.0.0\\microsoft.aspnetcore.components.authorization.9.0.0.nupkg.sha512",
     "C:\\Users\\samue\\.nuget\\packages\\microsoft.aspnetcore.components.forms\\9.0.8\\microsoft.aspnetcore.components.forms.9.0.8.nupkg.sha512",
     "C:\\Users\\samue\\.nuget\\packages\\microsoft.aspnetcore.components.web\\9.0.8\\microsoft.aspnetcore.components.web.9.0.8.nupkg.sha512",
     "C:\\Users\\samue\\.nuget\\packages\\microsoft.aspnetcore.components.webassembly\\9.0.8\\microsoft.aspnetcore.components.webassembly.9.0.8.nupkg.sha512",
