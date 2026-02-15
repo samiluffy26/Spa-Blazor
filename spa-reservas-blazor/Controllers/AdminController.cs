@@ -38,25 +38,11 @@ public class AdminController : ControllerBase
         // Usar la hora local del servidor para "Hoy" ya que el usuario reserva en su hora local
         var today = DateOnly.FromDateTime(DateTime.Now);
         var firstDayOfMonth = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, 1);
-        
-        Console.WriteLine($"[AdminStats] Calculating for Today: {today}");
 
-        // 1. Reservas Hoy
+        // 1. Reservas Hoy vs Próximas
         var allBookings = await _bookingRepository.GetAllAsync();
-        Console.WriteLine($"[AdminStats] Total bookings in DB: {allBookings.Count}");
-        
-        var bookingsToday = allBookings.Count(b => {
-            bool dateMatch = b.Date == today;
-            bool notCancelled = b.Status != BookingStatus.Cancelled;
-            
-            // Log para debug de por qué no coinciden
-            if (b.Date.Month == today.Month && b.Date.Year == today.Year)
-            {
-                Console.WriteLine($"[AdminStats] Check: ID={b.Id}, Date={b.Date}, Expected={today}, Status={b.Status}, Match={dateMatch && notCancelled}");
-            }
-            
-            return dateMatch && notCancelled;
-        });
+        var bookingsToday = allBookings.Count(b => b.Date == today && b.Status != BookingStatus.Cancelled);
+        var upcomingBookings = allBookings.Count(b => b.Date > today && b.Status != BookingStatus.Cancelled);
         
         // 2. Ingresos Mes
         var revenueMonth = allBookings
@@ -77,6 +63,7 @@ public class AdminController : ControllerBase
         return Ok(new DashboardStats
         {
             BookingsToday = bookingsToday,
+            UpcomingBookings = upcomingBookings,
             MaxDailyBookings = settings.MaxDailyBookings,
             OpeningTime = DateTime.Today.Add(settings.OpeningTime).ToString("HH:mm"),
             ClosingTime = DateTime.Today.Add(settings.ClosingTime).ToString("HH:mm"),
