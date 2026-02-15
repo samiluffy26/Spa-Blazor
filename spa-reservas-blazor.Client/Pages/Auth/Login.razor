@@ -67,15 +67,8 @@
         {
             var response = await AuthService.Login(LoginModel);
             
-            // Redirect based on role
-            if (response.Role == "Admin")
-            {
-                Navigation.NavigateTo("/admin/dashboard");
-            }
-            else
-            {
-                Navigation.NavigateTo("/");
-            }
+            // Redirect to home for everyone, letting the Header provide the Role-based options
+            Navigation.NavigateTo("/");
         }
         catch (Exception ex)
         {
