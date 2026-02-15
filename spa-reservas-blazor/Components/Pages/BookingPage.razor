@@ -1,5 +1,5 @@
 @page "/booking"
-@using spa_reservas_blazor.Models
+@using spa_reservas_blazor.Shared.Entities
 @using spa_reservas_blazor.Services
 @inject IBookingService BookingService
 @inject NavigationManager Navigation
@@ -226,12 +226,8 @@
     protected override void OnInitialized()
     {
         // Cargar servicios simulados
-        Services = new List<Service>
-        {
-            new Service { Id = "1", Name = "Masaje Relajante", Category = "Masajes", Price = 60, Duration = 60, Description = "Masaje suave para aliviar estrés.", ImageUrl = "" },
-            new Service { Id = "2", Name = "Facial Rejuvenecedor", Category = "Faciales", Price = 80, Duration = 50, Description = "Limpieza profunda.", ImageUrl = "" },
-            new Service { Id = "3", Name = "Piedras Calientes", Category = "Masajes", Price = 85, Duration = 75, Description = "Terapia con calor.", ImageUrl = "" }
-        };
+        // Cargar servicios desde el servicio centralizado
+        Services = BookingService.GetServices();
 
         // Slots de tiempo ejemplo
         GenerateTimeSlots();

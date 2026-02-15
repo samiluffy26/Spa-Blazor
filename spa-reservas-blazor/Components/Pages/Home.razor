@@ -1,5 +1,5 @@
 ﻿@page "/"
-@using spa_reservas_blazor.Models
+@using spa_reservas_blazor.Shared.Entities
 @using spa_reservas_blazor.Services
 @using spa_reservas_blazor.Components.Shared
 @inject IBookingService BookingService
@@ -67,11 +67,10 @@
                 @* Imagen/Visual *@
                 <div class="relative animate-slideUp">
                     <div class="relative rounded-3xl overflow-hidden shadow-2xl">
-                        <div class="aspect-[4/5] bg-gradient-to-br from-primary-200 to-sage-300">
-                            @* Aquí irías tu imagen principal del spa *@
-                            <div class="w-full h-full flex items-center justify-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles text-white/50"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
-                            </div>
+                        <div class="aspect-[4/5] bg-gray-200">
+                            <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?q=80&w=800&auto=format&fit=crop" 
+                                 alt="Relax Spa Atmosphere" 
+                                 class="w-full h-full object-cover" />
                         </div>
                         
                         @* Floating card *@
@@ -218,9 +217,7 @@
                         lo que necesitaba. Salí completamente renovada."
                     </p>
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                            <span class="text-primary-700 font-semibold">MG</span>
-                        </div>
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop" alt="María González" class="w-12 h-12 rounded-full object-cover" />
                         <div>
                             <p class="font-semibold text-gray-900">María González</p>
                             <p class="text-sm text-gray-500">Cliente frecuente</p>
@@ -241,9 +238,7 @@
                         Definitivamente volveré."
                     </p>
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                            <span class="text-primary-700 font-semibold">CR</span>
-                        </div>
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop" alt="Carlos Rodríguez" class="w-12 h-12 rounded-full object-cover" />
                         <div>
                             <p class="font-semibold text-gray-900">Carlos Rodríguez</p>
                             <p class="text-sm text-gray-500">Cliente nuevo</p>
@@ -264,9 +259,7 @@
                         ¡Altamente recomendado!"
                     </p>
                     <div class="flex items-center gap-3">
-                        <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                            <span class="text-primary-700 font-semibold">AS</span>
-                        </div>
+                        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format&fit=crop" alt="Ana Sánchez" class="w-12 h-12 rounded-full object-cover" />
                         <div>
                             <p class="font-semibold text-gray-900">Ana Sánchez</p>
                             <p class="text-sm text-gray-500">Cliente VIP</p>
@@ -298,10 +291,12 @@
 </div>
 
 @code {
-    private List<Service> PopularServices = new()
+    private List<Service> PopularServices = new();
+
+    protected override void OnInitialized()
     {
-        new Service { Id = "1", Name = "Masaje Relajante", Category = "Masajes", Price = 60, Duration = 60, Description = "Masaje suave para aliviar estrés con aceites esenciales.", ImageUrl = "" },
-        new Service { Id = "2", Name = "Facial Rejuvenecedor", Category = "Faciales", Price = 80, Duration = 50, Description = "Limpieza profunda e hidratación para una piel radiante.", ImageUrl = "" },
-        new Service { Id = "3", Name = "Circuito Hidroterapia", Category = "Spa", Price = 45, Duration = 90, Description = "Acceso a piscinas, sauna y jacuzzi por 90 minutos.", ImageUrl = "" }
-    };
+        var allServices = BookingService.GetServices();
+        // IDs: 1 (Relajante), 2 (Facial), 8 (Hidroterapia)
+        PopularServices = allServices.Where(s => s.Id == "1" || s.Id == "2" || s.Id == "8").ToList();
+    }
 }

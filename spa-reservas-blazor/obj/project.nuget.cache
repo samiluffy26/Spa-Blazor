@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "BVKqxmHbrDo=",
+  "dgSpecHash": "xGfH1yXGypY=",
   "success": true,
-  "projectFilePath": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor\\spa-reservas-blazor.csproj",
+  "projectFilePath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor\\spa-reservas-blazor.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\samue\\.nuget\\packages\\microsoft.aspnetcore.authorization\\9.0.8\\microsoft.aspnetcore.authorization.9.0.8.nupkg.sha512",
     "C:\\Users\\samue\\.nuget\\packages\\microsoft.aspnetcore.components\\9.0.8\\microsoft.aspnetcore.components.9.0.8.nupkg.sha512",

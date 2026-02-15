@@ -1,9 +1,9 @@
-@using spa_reservas_blazor.Models
+@using spa_reservas_blazor.Shared.Entities
 
 <div class="bg-white rounded-3xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group">
     @* Imagen *@
     <div class="relative h-48 overflow-hidden">
-        <div class="absolute inset-0 bg-gray-200 animate-pulse">
+        <div class="absolute inset-0 bg-gray-200 @(string.IsNullOrEmpty(Service.ImageUrl) ? "animate-pulse" : "")">
             @* Placeholder simulación de imagen *@
             @if (!string.IsNullOrEmpty(Service.ImageUrl))
             {

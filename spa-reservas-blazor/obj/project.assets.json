@@ -433,17 +433,55 @@
           }
         }
       },
+      "spa-reservas-blazor.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "spa-reservas-blazor.Shared": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/spa-reservas-blazor.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/spa-reservas-blazor.Application.dll": {}
+        }
+      },
       "spa-reservas-blazor.Client/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
-          "Microsoft.AspNetCore.Components.WebAssembly": "9.0.8"
+          "Microsoft.AspNetCore.Components.WebAssembly": "9.0.8",
+          "spa-reservas-blazor.Shared": "1.0.0"
         },
         "compile": {
           "bin/placeholder/spa-reservas-blazor.Client.dll": {}
         },
         "runtime": {
           "bin/placeholder/spa-reservas-blazor.Client.dll": {}
+        }
+      },
+      "spa-reservas-blazor.Infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "dependencies": {
+          "spa-reservas-blazor.Application": "1.0.0",
+          "spa-reservas-blazor.Shared": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/spa-reservas-blazor.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/spa-reservas-blazor.Infrastructure.dll": {}
+        }
+      },
+      "spa-reservas-blazor.Shared/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v9.0",
+        "compile": {
+          "bin/placeholder/spa-reservas-blazor.Shared.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/spa-reservas-blazor.Shared.dll": {}
         }
       }
     }
@@ -1094,16 +1132,34 @@
         "microsoft.jsinterop.webassembly.nuspec"
       ]
     },
+    "spa-reservas-blazor.Application/1.0.0": {
+      "type": "project",
+      "path": "../spa-reservas-blazor.Application/spa-reservas-blazor.Application.csproj",
+      "msbuildProject": "../spa-reservas-blazor.Application/spa-reservas-blazor.Application.csproj"
+    },
     "spa-reservas-blazor.Client/1.0.0": {
       "type": "project",
       "path": "../spa-reservas-blazor.Client/spa-reservas-blazor.Client.csproj",
       "msbuildProject": "../spa-reservas-blazor.Client/spa-reservas-blazor.Client.csproj"
+    },
+    "spa-reservas-blazor.Infrastructure/1.0.0": {
+      "type": "project",
+      "path": "../spa-reservas-blazor.Infrastructure/spa-reservas-blazor.Infrastructure.csproj",
+      "msbuildProject": "../spa-reservas-blazor.Infrastructure/spa-reservas-blazor.Infrastructure.csproj"
+    },
+    "spa-reservas-blazor.Shared/1.0.0": {
+      "type": "project",
+      "path": "../spa-reservas-blazor.Shared/spa-reservas-blazor.Shared.csproj",
+      "msbuildProject": "../spa-reservas-blazor.Shared/spa-reservas-blazor.Shared.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net9.0": [
       "Microsoft.AspNetCore.Components.WebAssembly.Server >= 9.0.8",
-      "spa-reservas-blazor.Client >= 1.0.0"
+      "spa-reservas-blazor.Application >= 1.0.0",
+      "spa-reservas-blazor.Client >= 1.0.0",
+      "spa-reservas-blazor.Infrastructure >= 1.0.0",
+      "spa-reservas-blazor.Shared >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -1113,11 +1169,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor\\spa-reservas-blazor.csproj",
+      "projectUniqueName": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor\\spa-reservas-blazor.csproj",
       "projectName": "spa-reservas-blazor",
-      "projectPath": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor\\spa-reservas-blazor.csproj",
+      "projectPath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor\\spa-reservas-blazor.csproj",
       "packagesPath": "C:\\Users\\samue\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor\\obj\\",
+      "outputPath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -1139,8 +1195,17 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Client\\spa-reservas-blazor.Client.csproj": {
-              "projectPath": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Client\\spa-reservas-blazor.Client.csproj"
+            "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Application\\spa-reservas-blazor.Application.csproj": {
+              "projectPath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Application\\spa-reservas-blazor.Application.csproj"
+            },
+            "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Client\\spa-reservas-blazor.Client.csproj": {
+              "projectPath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Client\\spa-reservas-blazor.Client.csproj"
+            },
+            "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Infrastructure\\spa-reservas-blazor.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Infrastructure\\spa-reservas-blazor.Infrastructure.csproj"
+            },
+            "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Shared\\spa-reservas-blazor.Shared.csproj": {
+              "projectPath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Shared\\spa-reservas-blazor.Shared.csproj"
             }
           }
         }

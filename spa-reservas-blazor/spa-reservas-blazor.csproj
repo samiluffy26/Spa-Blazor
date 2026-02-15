@@ -13,4 +13,10 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="9.0.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\spa-reservas-blazor.Application\spa-reservas-blazor.Application.csproj" />
+    <ProjectReference Include="..\spa-reservas-blazor.Infrastructure\spa-reservas-blazor.Infrastructure.csproj" />
+    <ProjectReference Include="..\spa-reservas-blazor.Shared\spa-reservas-blazor.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
