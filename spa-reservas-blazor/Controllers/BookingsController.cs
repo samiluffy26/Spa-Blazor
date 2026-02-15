@@ -22,7 +22,7 @@ public class BookingsController : ControllerBase
     }
 
     [HttpGet("my")]
-    [Microsoft.AspNetCore.Authorization.Authorize]
+    [Microsoft.AspNetCore.Authorization.Authorize(AuthenticationSchemes = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme)]
     public async Task<ActionResult<List<Booking>>> GetMyBookings()
     {
         var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value 

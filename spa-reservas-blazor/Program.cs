@@ -59,8 +59,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = false,
             ValidateAudience = false
         };
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine($"[AuthDebug] JWT Authentication failed: {context.Exception.Message}");
+                return Task.CompletedTask;
+            }
+        };
     });
+builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();
+
+var tokenCheck = builder.Configuration.GetSection("AppSettings:Token").Value;
+Console.WriteLine($"[AuthDebug] JWT Token Key Length: {tokenCheck?.Length ?? -1}");
 
 var app = builder.Build();
 
