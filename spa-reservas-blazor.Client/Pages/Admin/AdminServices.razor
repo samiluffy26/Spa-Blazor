@@ -1,0 +1,60 @@
+@page "/admin/services"
+@using spa_reservas_blazor.Shared.Entities
+@using spa_reservas_blazor.Services
+@inject IBookingService BookingService
+@layout Layout.AdminLayout
+@rendermode InteractiveAuto
+
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-bold text-gray-800">Servicios</h2>
+        <a href="admin/services/new" class="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            Nuevo Servicio
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @foreach (var service in Services)
+        {
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
+                <div class="h-40 bg-gray-200 relative">
+                    <img src="@service.ImageUrl" class="w-full h-full object-cover" onerror="this.src='/images/placeholder.jpg'" />
+                    <span class="absolute top-2 right-2 bg-white/90 px-2 py-1 rounded text-xs font-semibold text-gray-700">
+                        Top Rated <!-- Placeholder for tag -->
+                    </span>
+                </div>
+                <div class="p-5 flex-1 flex flex-col">
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="font-bold text-gray-900 text-lg">@service.Name</h3>
+                        <span class="text-primary-700 font-bold">$@service.Price</span>
+                    </div>
+                    <p class="text-gray-500 text-sm mb-4 line-clamp-2">@service.Description</p>
+                    
+                    <div class="mt-auto pt-4 border-t border-gray-100 flex justify-between items-center text-sm text-gray-500">
+                        <span>Min: @service.Duration</span>
+                        <div class="flex gap-2">
+                            <a href="admin/services/edit/@service.Id" class="text-blue-600 hover:text-blue-800 font-medium">Editar</a>
+                            <button @onclick="() => HandleDelete(service.Id)" class="text-red-600 hover:text-red-800 font-medium">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<Service> Services = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Services = await BookingService.GetServicesAsync();
+    }
+
+    private async Task HandleDelete(string id)
+    {
+        await BookingService.DeleteServiceAsync(id);
+        Services = await BookingService.GetServicesAsync(); // Reload
+    }
+}

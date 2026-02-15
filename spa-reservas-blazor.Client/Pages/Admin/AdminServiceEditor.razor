@@ -1,0 +1,167 @@
+@page "/admin/services/new"
+@page "/admin/services/edit/{Id}"
+@using spa_reservas_blazor.Shared.Entities
+@using spa_reservas_blazor.Services
+@inject IBookingService BookingService
+@inject NavigationManager Navigation
+@layout Layout.AdminLayout
+@rendermode InteractiveAuto
+
+<div class="max-w-3xl mx-auto">
+    <div class="mb-6">
+        <a href="admin/services" class="text-gray-500 hover:text-gray-700 flex items-center gap-1 mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-left"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+            Volver a Servicios
+        </a>
+        <h2 class="text-2xl font-bold text-gray-800">@(IsEditing ? "Editar Servicio" : "Nuevo Servicio")</h2>
+    </div>
+
+    <EditForm Model="CurrentService" OnValidSubmit="HandleSubmit">
+        @* <DataAnnotationsValidator /> *@
+
+        <div class="bg-white p-8 rounded-xl shadow-sm border border-gray-100 space-y-6">
+            
+            @* Nombre *@
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Nombre del Servicio</label>
+                <InputText @bind-Value="CurrentService.Name" class="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500" required />
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+                @* Categoria *@
+                <div>
+                     <label class="block text-sm font-medium text-gray-700 mb-1">Categoría</label>
+                     <InputSelect @bind-Value="CurrentService.Category" class="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500">
+                         <option value="">Seleccionar...</option>
+                         @foreach (var cat in Categories)
+                         {
+                             <option value="@cat.Name">@cat.Name</option>
+                         }
+                     </InputSelect>
+                </div>
+                
+                 @* Precio y Duracion *@
+                 <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Precio ($)</label>
+                    <InputNumber @bind-Value="CurrentService.Price" class="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500" />
+                 </div>
+            </div>
+
+             <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Duración (minutos)</label>
+                 <InputNumber @bind-Value="CurrentService.Duration" class="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500" />
+            </div>
+
+            @* Descripcion *@
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Descripción</label>
+                <InputTextArea @bind-Value="CurrentService.Description" rows="4" class="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500" />
+            </div>
+
+            @* Imagen *@
+            <div>
+                 <label class="block text-sm font-medium text-gray-700 mb-1">Imagen</label>
+                 
+                 <div class="flex flex-col gap-4">
+                     <!-- Preview -->
+                     @if (!string.IsNullOrEmpty(CurrentService.ImageUrl))
+                     {
+                         <div class="relative w-full h-48 bg-gray-100 rounded-lg overflow-hidden">
+                             <img src="@CurrentService.ImageUrl" class="w-full h-full object-cover" />
+                             <button type="button" @onclick="() => CurrentService.ImageUrl = string.Empty" class="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full shadow-md hover:bg-red-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                             </button>
+                         </div>
+                     }
+
+                     <!-- Tabs for Source -->
+                     <div class="flex gap-4 border-b border-gray-200">
+                         <button type="button" class="@(ImageTab == "upload" ? "border-b-2 border-primary-500 text-primary-600" : "text-gray-500") px-4 py-2 font-medium" @onclick='() => SetImageTab("upload")'>Subir Archivo</button>
+                         <button type="button" class="@(ImageTab == "url" ? "border-b-2 border-primary-500 text-primary-600" : "text-gray-500") px-4 py-2 font-medium" @onclick='() => SetImageTab("url")'>URL Externa</button>
+                     </div>
+
+                     @if (ImageTab == "upload")
+                     {
+                         <InputFile OnChange="HandleFileSelected" class="block w-full text-sm text-gray-500
+                            file:mr-4 file:py-2 file:px-4
+                            file:rounded-full file:border-0
+                            file:text-sm file:font-semibold
+                            file:bg-primary-50 file:text-primary-700
+                            hover:file:bg-primary-100
+                          "/>
+                     }
+                     else
+                     {
+                         <InputText @bind-Value="CurrentService.ImageUrl" placeholder="https://ejemplo.com/imagen.jpg" class="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500" />
+                     }
+                 </div>
+            </div>
+
+            <div class="pt-6 border-t border-gray-100 flex justify-end gap-3">
+                <a href="admin/services" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium">Cancelar</a>
+                <button type="submit" class="bg-primary-600 text-white px-8 py-2 rounded-lg hover:bg-primary-700 shadow-md font-medium">
+                    @(IsEditing ? "Guardar Cambios" : "Crear Servicio")
+                </button>
+            </div>
+        </div>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter] public string? Id { get; set; }
+
+    private Service CurrentService = new();
+    private List<Category> Categories = new();
+    private bool IsEditing => !string.IsNullOrEmpty(Id);
+    private string ImageTab = "upload"; // upload | url
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categories = await BookingService.GetCategoriesAsync();
+
+        if (IsEditing)
+        {
+            var service = await BookingService.GetServiceByIdAsync(Id!);
+            if (service != null)
+            {
+                CurrentService = service;
+            }
+        }
+    }
+
+    private void SetImageTab(string tab) => ImageTab = tab;
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            // Validar tamaño/tipo si es necesario
+            using var content = new MultipartFormDataContent();
+            var fileContent = new StreamContent(file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024)); // 10MB max
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+            content.Add(fileContent, "file", file.Name);
+
+            var url = await BookingService.UploadImageAsync(content);
+            if (!string.IsNullOrEmpty(url))
+            {
+                CurrentService.ImageUrl = url;
+            }
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (IsEditing)
+        {
+            await BookingService.UpdateServiceAsync(CurrentService);
+        }
+        else
+        {
+            CurrentService.Id = Guid.NewGuid().ToString(); // O dejar que Mongo lo genere si se usa ObjectId, pero aqui usamos string Guid
+            await BookingService.CreateServiceAsync(CurrentService);
+        }
+        
+        Navigation.NavigateTo("admin/services");
+    }
+}
