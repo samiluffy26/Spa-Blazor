@@ -1,25 +1,40 @@
 @page "/admin/dashboard"
 @layout Layout.AdminLayout
+@using Microsoft.AspNetCore.Authorization
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- Stats Cards Placeholder -->
-    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-        <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Reservas Hoy</h3>
-        <p class="text-3xl font-bold text-gray-900 mt-2">12</p>
-    </div>
-    
-     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-        <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Ingresos Mes</h3>
-        <p class="text-3xl font-bold text-gray-900 mt-2">$3,450</p>
-    </div>
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-        <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Servicios Activos</h3>
-        <p class="text-3xl font-bold text-gray-900 mt-2">8</p>
-    </div>
-</div>
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Stats Cards Placeholder -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Reservas Hoy</h3>
+                <p class="text-3xl font-bold text-gray-900 mt-2">12</p>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Ingresos Mes</h3>
+                <p class="text-3xl font-bold text-gray-900 mt-2">$3,450</p>
+            </div>
 
-<div class="mt-8 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-    <h3 class="text-lg font-bold text-gray-800 mb-4">Actividad Reciente</h3>
-    <p class="text-gray-500">No hay actividad reciente para mostrar.</p>
-</div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Servicios Activos</h3>
+                <p class="text-3xl font-bold text-gray-900 mt-2">8</p>
+            </div>
+        </div>
+
+        <div class="mt-8 bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">Actividad Reciente</h3>
+            <p class="text-gray-500">No hay actividad reciente para mostrar.</p>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="flex flex-col items-center justify-center p-12 text-center">
+             <h2 class="text-2xl font-bold text-gray-800 mb-2">Acceso Denegado</h2>
+             <p class="text-gray-500">No tienes permisos de Administrador.</p>
+             <p class="text-xs text-gray-400 mt-2">AuthCheck on Client: @(DateTime.Now)</p>
+             <a href="login" class="mt-4 bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700">Ir al Login</a>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>

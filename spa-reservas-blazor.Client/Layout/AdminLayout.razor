@@ -2,6 +2,7 @@
 @using spa_reservas_blazor.Client.Layout
 @inject spa_reservas_blazor.Client.Auth.IAuthService AuthService
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 
 <div class="flex h-screen bg-gray-100 font-sans">
     
@@ -49,25 +50,36 @@
     <!-- Main Content -->
     <!-- Main Content -->
     <main class="flex-1 overflow-y-auto p-8">
-        <AuthorizeView Roles="Admin">
-            <Authorized>
-                @Body
-            </Authorized>
-            <NotAuthorized>
-                <div class="flex flex-col items-center justify-center h-full text-center">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">Acceso Denegado</h2>
-                    <p class="text-gray-500 mb-6">No tienes permisos para ver esta sección.</p>
-                    <a href="login" class="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700">Ir al Login</a>
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
+        @Body
     </main>
 </div>
 
 @code {
+    private string DebugToken = "";
+
     private async Task Logout()
     {
         await AuthService.Logout();
         Navigation.NavigateTo("/login");
+    }
+
+    private async Task CheckToken()
+    {
+        try 
+        {
+             var token = await JSRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+             if (string.IsNullOrEmpty(token))
+             {
+                 DebugToken = "Token matches: null/empty";
+             }
+             else
+             {
+                 DebugToken = $"Found: {token.Substring(0, Math.Min(10, token.Length))}... Len: {token.Length}";
+             }
+        }
+        catch(Exception ex)
+        {
+             DebugToken = $"Error: {ex.Message}";
+        }
     }
 }

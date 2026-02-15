@@ -83,6 +83,8 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             var key = kvp.Key;
             var value = kvp.Value.ToString();
             
+            Console.WriteLine($"[AuthDebug] Raw Claim: {key} = {value}");
+
             // Fix: Map standard "role" claim to Microsoft's ClaimTypes.Role
             if (key == "role" || key == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
             {
@@ -91,6 +93,12 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
 
             claims.Add(new Claim(key, value));
         }
+        
+        foreach(var c in claims)
+        {
+             Console.WriteLine($"[AuthDebug] Final Claim: {c.Type} = {c.Value}");
+        }
+
         return claims;
     }
 

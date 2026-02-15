@@ -5,7 +5,12 @@
 @inject IBookingService BookingService
 @inject NavigationManager Navigation
 @layout Layout.AdminLayout
-@rendermode InteractiveAuto
+@using Microsoft.AspNetCore.Authorization
+
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
+<AuthorizeView Roles="Admin" Context="authContext">
+    <Authorized>
 
 <div class="max-w-3xl mx-auto">
     <div class="mb-6">
@@ -106,9 +111,19 @@
         </div>
     </EditForm>
 </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="flex flex-col items-center justify-center p-12 text-center">
+             <h2 class="text-2xl font-bold text-gray-800 mb-2">Acceso Denegado</h2>
+             <p class="text-gray-500">No tienes permisos de Administrador.</p>
+             <a href="login" class="mt-4 bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700">Ir al Login</a>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
-    [Parameter] public string? Id { get; set; }
+    [Parameter]
+    public string? Id { get; set; }
 
     private Service CurrentService = new();
     private List<Category> Categories = new();
@@ -125,6 +140,10 @@
             if (service != null)
             {
                 CurrentService = service;
+            }
+            else
+            {
+                Navigation.NavigateTo("/admin/services");
             }
         }
     }
