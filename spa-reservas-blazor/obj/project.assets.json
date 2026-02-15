@@ -557,7 +557,7 @@
           "buildTransitive/net8.0/_._": {}
         }
       },
-      "Microsoft.IdentityModel.Abstractions/8.5.0": {
+      "Microsoft.IdentityModel.Abstractions/8.0.1": {
         "type": "package",
         "compile": {
           "lib/net9.0/Microsoft.IdentityModel.Abstractions.dll": {
@@ -586,10 +586,10 @@
           }
         }
       },
-      "Microsoft.IdentityModel.Logging/8.5.0": {
+      "Microsoft.IdentityModel.Logging/8.0.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.IdentityModel.Abstractions": "8.5.0"
+          "Microsoft.IdentityModel.Abstractions": "8.0.1"
         },
         "compile": {
           "lib/net9.0/Microsoft.IdentityModel.Logging.dll": {
@@ -635,11 +635,10 @@
           }
         }
       },
-      "Microsoft.IdentityModel.Tokens/8.5.0": {
+      "Microsoft.IdentityModel.Tokens/8.0.1": {
         "type": "package",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "9.0.0",
-          "Microsoft.IdentityModel.Logging": "8.5.0"
+          "Microsoft.IdentityModel.Logging": "8.0.1"
         },
         "compile": {
           "lib/net9.0/Microsoft.IdentityModel.Tokens.dll": {
@@ -1745,14 +1744,13 @@
         "useSharedDesignerContext.txt"
       ]
     },
-    "Microsoft.IdentityModel.Abstractions/8.5.0": {
-      "sha512": "wdhxpIzpCW49+MR0oeoJqjDA8vtVXCJPrqXx19UsUOpnE+8PX9byVdFJuVPtT8tkExhU+c8eQxw6OLNQW3i0wg==",
+    "Microsoft.IdentityModel.Abstractions/8.0.1": {
+      "sha512": "OtlIWcyX01olfdevPKZdIPfBEvbcioDyBiE/Z2lHsopsMD7twcKtlN9kMevHmI5IIPhFpfwCIiR6qHQz1WHUIw==",
       "type": "package",
-      "path": "microsoft.identitymodel.abstractions/8.5.0",
+      "path": "microsoft.identitymodel.abstractions/8.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "README.md",
         "lib/net462/Microsoft.IdentityModel.Abstractions.dll",
         "lib/net462/Microsoft.IdentityModel.Abstractions.xml",
         "lib/net472/Microsoft.IdentityModel.Abstractions.dll",
@@ -1765,7 +1763,7 @@
         "lib/net9.0/Microsoft.IdentityModel.Abstractions.xml",
         "lib/netstandard2.0/Microsoft.IdentityModel.Abstractions.dll",
         "lib/netstandard2.0/Microsoft.IdentityModel.Abstractions.xml",
-        "microsoft.identitymodel.abstractions.8.5.0.nupkg.sha512",
+        "microsoft.identitymodel.abstractions.8.0.1.nupkg.sha512",
         "microsoft.identitymodel.abstractions.nuspec"
       ]
     },
@@ -1792,14 +1790,13 @@
         "microsoft.identitymodel.jsonwebtokens.nuspec"
       ]
     },
-    "Microsoft.IdentityModel.Logging/8.5.0": {
-      "sha512": "UCTOGVp7h+PHrI4Q/yV0LT2k7dbjlzrnFhfqDUsQ91rOFH8ZNRMZYFY/J79KWSl+SZNnu3ecap31z//NevUaEw==",
+    "Microsoft.IdentityModel.Logging/8.0.1": {
+      "sha512": "UCPF2exZqBXe7v/6sGNiM6zCQOUXXQ9+v5VTb9gPB8ZSUPnX53BxlN78v2jsbIvK9Dq4GovQxo23x8JgWvm/Qg==",
       "type": "package",
-      "path": "microsoft.identitymodel.logging/8.5.0",
+      "path": "microsoft.identitymodel.logging/8.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "README.md",
         "lib/net462/Microsoft.IdentityModel.Logging.dll",
         "lib/net462/Microsoft.IdentityModel.Logging.xml",
         "lib/net472/Microsoft.IdentityModel.Logging.dll",
@@ -1812,7 +1809,7 @@
         "lib/net9.0/Microsoft.IdentityModel.Logging.xml",
         "lib/netstandard2.0/Microsoft.IdentityModel.Logging.dll",
         "lib/netstandard2.0/Microsoft.IdentityModel.Logging.xml",
-        "microsoft.identitymodel.logging.8.5.0.nupkg.sha512",
+        "microsoft.identitymodel.logging.8.0.1.nupkg.sha512",
         "microsoft.identitymodel.logging.nuspec"
       ]
     },
@@ -1862,14 +1859,13 @@
         "microsoft.identitymodel.protocols.openidconnect.nuspec"
       ]
     },
-    "Microsoft.IdentityModel.Tokens/8.5.0": {
-      "sha512": "dYxp8/JvBpRD5c4H9jBJbKRJnvzvqayEXajr8e1JFdEVMvQXAylPWNwnXghzuGCjKc4bbel2pnDKlKjQnWZlgQ==",
+    "Microsoft.IdentityModel.Tokens/8.0.1": {
+      "sha512": "kDimB6Dkd3nkW2oZPDkMkVHfQt3IDqO5gL0oa8WVy3OP4uE8Ij+8TXnqg9TOd9ufjsY3IDiGz7pCUbnfL18tjg==",
       "type": "package",
-      "path": "microsoft.identitymodel.tokens/8.5.0",
+      "path": "microsoft.identitymodel.tokens/8.0.1",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "README.md",
         "lib/net462/Microsoft.IdentityModel.Tokens.dll",
         "lib/net462/Microsoft.IdentityModel.Tokens.xml",
         "lib/net472/Microsoft.IdentityModel.Tokens.dll",
@@ -1882,7 +1878,7 @@
         "lib/net9.0/Microsoft.IdentityModel.Tokens.xml",
         "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.dll",
         "lib/netstandard2.0/Microsoft.IdentityModel.Tokens.xml",
-        "microsoft.identitymodel.tokens.8.5.0.nupkg.sha512",
+        "microsoft.identitymodel.tokens.8.0.1.nupkg.sha512",
         "microsoft.identitymodel.tokens.nuspec"
       ]
     },
@@ -2307,7 +2303,6 @@
       "BCrypt.Net-Next >= 4.0.3",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 9.0.2",
       "Microsoft.AspNetCore.Components.WebAssembly.Server >= 9.0.2",
-      "Microsoft.IdentityModel.Tokens >= 8.5.0",
       "spa-reservas-blazor.Application >= 1.0.0",
       "spa-reservas-blazor.Client >= 1.0.0",
       "spa-reservas-blazor.Infrastructure >= 1.0.0",
@@ -2321,11 +2316,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor\\spa-reservas-blazor.csproj",
+      "projectUniqueName": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor\\spa-reservas-blazor.csproj",
       "projectName": "spa-reservas-blazor",
-      "projectPath": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor\\spa-reservas-blazor.csproj",
+      "projectPath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor\\spa-reservas-blazor.csproj",
       "packagesPath": "C:\\Users\\samue\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor\\obj\\",
+      "outputPath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -2347,17 +2342,17 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "projectReferences": {
-            "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Application\\spa-reservas-blazor.Application.csproj": {
-              "projectPath": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Application\\spa-reservas-blazor.Application.csproj"
+            "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Application\\spa-reservas-blazor.Application.csproj": {
+              "projectPath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Application\\spa-reservas-blazor.Application.csproj"
             },
-            "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Client\\spa-reservas-blazor.Client.csproj": {
-              "projectPath": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Client\\spa-reservas-blazor.Client.csproj"
+            "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Client\\spa-reservas-blazor.Client.csproj": {
+              "projectPath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Client\\spa-reservas-blazor.Client.csproj"
             },
-            "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Infrastructure\\spa-reservas-blazor.Infrastructure.csproj": {
-              "projectPath": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Infrastructure\\spa-reservas-blazor.Infrastructure.csproj"
+            "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Infrastructure\\spa-reservas-blazor.Infrastructure.csproj": {
+              "projectPath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Infrastructure\\spa-reservas-blazor.Infrastructure.csproj"
             },
-            "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Shared\\spa-reservas-blazor.Shared.csproj": {
-              "projectPath": "c:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Shared\\spa-reservas-blazor.Shared.csproj"
+            "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Shared\\spa-reservas-blazor.Shared.csproj": {
+              "projectPath": "C:\\Users\\samue\\spa-reservas-blazor\\spa-reservas-blazor.Shared\\spa-reservas-blazor.Shared.csproj"
             }
           }
         }
@@ -2389,10 +2384,6 @@
           "Microsoft.AspNetCore.Components.WebAssembly.Server": {
             "target": "Package",
             "version": "[9.0.2, )"
-          },
-          "Microsoft.IdentityModel.Tokens": {
-            "target": "Package",
-            "version": "[8.5.0, )"
           }
         },
         "imports": [

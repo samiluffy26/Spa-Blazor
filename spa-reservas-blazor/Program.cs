@@ -87,37 +87,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();
 
 var tokenCheck = builder.Configuration.GetSection("AppSettings:Token").Value;
-Console.WriteLine($"[AuthDebug] JWT Token Key Length: {tokenCheck?.Length ?? -1}");
 
 var app = builder.Build();
-
-IdentityModelEventSource.ShowPII = true;
-
-// Header Debugging Middleware (AT THE VERY TOP)
-app.Use(async (context, next) =>
-{
-    if (context.Request.Path.StartsWithSegments("/api"))
-    {
-        var authHeader = context.Request.Headers["Authorization"];
-        Console.WriteLine($"[AuthDebug] Request: {context.Request.Method} {context.Request.Path}");
-        Console.WriteLine($"[AuthDebug] Header Count: {authHeader.Count}");
-        
-        var headerStr = authHeader.ToString();
-        if (!string.IsNullOrEmpty(headerStr))
-        {
-            Console.WriteLine($"[AuthDebug] Received Header: {headerStr}");
-            var bytes = System.Text.Encoding.UTF8.GetBytes(headerStr);
-            Console.WriteLine($"[AuthDebug] Header Bytes: {BitConverter.ToString(bytes)}");
-            
-            if (headerStr.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-            {
-                var token = headerStr.Substring(7).Trim();
-                Console.WriteLine($"[AuthDebug] Token parsed (dots: {token.Count(f => f == '.')})");
-            }
-        }
-    }
-    await next();
-});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
