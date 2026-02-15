@@ -9,6 +9,7 @@ builder.Services.AddScoped<spa_reservas_blazor.Services.IBookingService, spa_res
 
 // Auth Services
 builder.Services.AddAuthorizationCore();
+builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider, spa_reservas_blazor.Client.Auth.CustomAuthStateProvider>();
 builder.Services.AddScoped<spa_reservas_blazor.Client.Auth.IAuthService, spa_reservas_blazor.Client.Auth.AuthService>();
 

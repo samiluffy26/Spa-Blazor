@@ -1,16 +1,24 @@
 @page "/profile"
 @using spa_reservas_blazor.Client.Auth
 @inject IAuthService AuthService
-@rendermode InteractiveWebAssembly
-@attribute [Authorize]
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+@using Microsoft.AspNetCore.Components.Authorization
+@using spa_reservas_blazor.Client.Components.Shared 
 
-<div class="container-custom py-12">
-    <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8">
-        <h1 class="text-3xl font-serif font-bold text-gray-900 mb-6">Mi Perfil</h1>
-        <p class="text-gray-600 mb-4">Bienvenido a tu perfil de usuario. Aquí podrás gestionar tus datos personales.</p>
-        
-        <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-            <p class="text-sm text-gray-500">Esta sección está en construcción.</p>
+<AuthorizeView>
+    <Authorized>
+        <div class="container-custom py-12">
+            <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8">
+                <h1 class="text-3xl font-serif font-bold text-gray-900 mb-6">Mi Perfil</h1>
+                <p class="text-gray-600 mb-4">Bienvenido a tu perfil de usuario. Aquí podrás gestionar tus datos personales.</p>
+                
+                <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                    <p class="text-sm text-gray-500">Esta sección está en construcción.</p>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+    </Authorized>
+    <NotAuthorized>
+        <RedirectToLogin />
+    </NotAuthorized>
+</AuthorizeView>
