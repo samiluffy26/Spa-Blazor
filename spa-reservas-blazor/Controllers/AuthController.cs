@@ -2,7 +2,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.IdentityModel.JsonWebTokens;
+using System.IdentityModel.Tokens.Jwt;
 using spa_reservas_blazor.Application.Interfaces;
 using spa_reservas_blazor.Shared.DTOs;
 using spa_reservas_blazor.Shared.Entities;
@@ -73,26 +73,24 @@ public class AuthController : ControllerBase
 
     private AuthResponse GenerateToken(User user)
     {
-        var claims = new Dictionary<string, object>
+        var claims = new List<Claim>
         {
-            [JwtRegisteredClaimNames.Sub] = user.Id,
-            [JwtRegisteredClaimNames.Name] = user.Name,
-            [JwtRegisteredClaimNames.Email] = user.Email,
-            ["role"] = user.Role
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
+            new Claim(ClaimTypes.Name, user.Name),
+            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.Role)
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         
-        var descriptor = new SecurityTokenDescriptor
-        {
-            Claims = claims,
-            Expires = DateTime.UtcNow.AddDays(1),
-            SigningCredentials = creds
-        };
+        var token = new JwtSecurityToken(
+            claims: claims,
+            expires: DateTime.Now.AddDays(1),
+            signingCredentials: creds
+        );
 
-        var handler = new JsonWebTokenHandler();
-        var jwt = handler.CreateToken(descriptor);
+        var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
         return new AuthResponse
         {

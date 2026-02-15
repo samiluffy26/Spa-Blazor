@@ -77,11 +77,11 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             var value = kvp.Value.ToString();
             
             // Map standard "role" claim to Microsoft's ClaimTypes.Role
-            if (key == "role" || key == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
+            if (key == "role" || key == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role" || key == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
             {
                 key = ClaimTypes.Role;
             }
-            else if (key == "email" || key == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")
+            else if (key == "email" || key == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress" || key == "email")
             {
                 key = ClaimTypes.Email;
             }

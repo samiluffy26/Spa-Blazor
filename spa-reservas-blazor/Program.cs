@@ -10,9 +10,9 @@ using AppBookingRepository = spa_reservas_blazor.Infrastructure.Repositories.Boo
 using IAppServiceRepository = spa_reservas_blazor.Application.Interfaces.IServiceRepository;
 using AppServiceRepository = spa_reservas_blazor.Infrastructure.Repositories.ServiceRepository;
 using spa_reservas_blazor.Application.Interfaces;
-using spa_reservas_blazor.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.IdentityModel.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,19 +58,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value!)),
             ValidateIssuer = false,
             ValidateAudience = false,
-            RequireExpirationTime = true,
-            ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
-        };
-        options.UseSecurityTokenValidators = false; // Use the newer JsonWebTokenHandler
-        options.MapInboundClaims = false;
-        options.Events = new JwtBearerEvents
-        {
-            OnAuthenticationFailed = context =>
-            {
-                Console.WriteLine($"[AuthDebug] JWT Authentication failed: {context.Exception.Message}");
-                return Task.CompletedTask;
-            }
         };
     });
 builder.Services.AddAuthorization();
@@ -80,6 +68,34 @@ var tokenCheck = builder.Configuration.GetSection("AppSettings:Token").Value;
 Console.WriteLine($"[AuthDebug] JWT Token Key Length: {tokenCheck?.Length ?? -1}");
 
 var app = builder.Build();
+
+IdentityModelEventSource.ShowPII = true;
+
+// Header Debugging Middleware (AT THE VERY TOP)
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/api"))
+    {
+        var authHeader = context.Request.Headers["Authorization"];
+        Console.WriteLine($"[AuthDebug] Request: {context.Request.Method} {context.Request.Path}");
+        Console.WriteLine($"[AuthDebug] Header Count: {authHeader.Count}");
+        
+        var headerStr = authHeader.ToString();
+        if (!string.IsNullOrEmpty(headerStr))
+        {
+            Console.WriteLine($"[AuthDebug] Received Header: {headerStr}");
+            var bytes = System.Text.Encoding.UTF8.GetBytes(headerStr);
+            Console.WriteLine($"[AuthDebug] Header Bytes: {BitConverter.ToString(bytes)}");
+            
+            if (headerStr.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+            {
+                var token = headerStr.Substring(7).Trim();
+                Console.WriteLine($"[AuthDebug] Token parsed (dots: {token.Count(f => f == '.')})");
+            }
+        }
+    }
+    await next();
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -99,28 +115,9 @@ else
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
-
+app.UseAntiforgery();
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Header Debugging Middleware
-app.Use(async (context, next) =>
-{
-    if (context.Request.Path.StartsWithSegments("/api"))
-    {
-        var authHeader = context.Request.Headers["Authorization"].ToString();
-        if (!string.IsNullOrEmpty(authHeader))
-        {
-            Console.WriteLine($"[AuthDebug] Received Header: {authHeader}");
-            var bytes = System.Text.Encoding.UTF8.GetBytes(authHeader);
-            Console.WriteLine($"[AuthDebug] Header Bytes: {BitConverter.ToString(bytes)}");
-        }
-    }
-    await next();
-});
-
-app.UseAntiforgery();
 
 app.MapStaticAssets();
 app.MapControllers();
