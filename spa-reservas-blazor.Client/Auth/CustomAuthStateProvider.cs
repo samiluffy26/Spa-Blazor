@@ -41,9 +41,34 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         var user = new ClaimsPrincipal(identity);
         var state = new AuthenticationState(user);
 
-        NotifyAuthenticationStateChanged(Task.FromResult(state));
-
         return state;
+    }
+
+    public void UpdateAuthenticationState(string? token)
+    {
+        var identity = new ClaimsIdentity();
+        _httpClient.DefaultRequestHeaders.Authorization = null;
+
+        if (!string.IsNullOrEmpty(token))
+        {
+            try
+            {
+                var claims = ParseClaimsFromJwt(token);
+                identity = new ClaimsIdentity(claims, "jwt");
+                _httpClient.DefaultRequestHeaders.Authorization = 
+                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            }
+            catch
+            {
+                // Verify if we can remove item here without async, if not, relying on GetAuthenticationStateAsync to clean up is fine
+                // or we assume token passed here is valid
+            }
+        }
+
+        var user = new ClaimsPrincipal(identity);
+        var state = new AuthenticationState(user);
+
+        NotifyAuthenticationStateChanged(Task.FromResult(state));
     }
 
     public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)

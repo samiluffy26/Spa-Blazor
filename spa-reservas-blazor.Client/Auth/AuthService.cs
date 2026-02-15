@@ -36,7 +36,8 @@ public class AuthService : IAuthService
 
         var response = await result.Content.ReadFromJsonAsync<AuthResponse>();
         await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", response.Token);
-        await ((CustomAuthStateProvider)_authStateProvider).GetAuthenticationStateAsync();
+        
+        ((CustomAuthStateProvider)_authStateProvider).UpdateAuthenticationState(response.Token);
         
         return response;
     }
@@ -52,7 +53,8 @@ public class AuthService : IAuthService
 
         var response = await result.Content.ReadFromJsonAsync<AuthResponse>();
         await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", response.Token);
-        await ((CustomAuthStateProvider)_authStateProvider).GetAuthenticationStateAsync();
+        
+        ((CustomAuthStateProvider)_authStateProvider).UpdateAuthenticationState(response.Token);
 
         return response;
     }
@@ -60,6 +62,6 @@ public class AuthService : IAuthService
     public async Task Logout()
     {
         await _jsRuntime.InvokeVoidAsync("localStorage.removeItem", "authToken");
-        await ((CustomAuthStateProvider)_authStateProvider).GetAuthenticationStateAsync();
+        ((CustomAuthStateProvider)_authStateProvider).UpdateAuthenticationState(null);
     }
 }
