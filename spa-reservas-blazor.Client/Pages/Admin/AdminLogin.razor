@@ -3,13 +3,6 @@
 @using spa_reservas_blazor.Client.Auth
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
-@layout Layout.AdminLayout 
-@* Although AdminLayout has nav, we might want a blank layout for login. 
-   For simplicity, AdminLayout can check auth and redirect, but here we are logging in.
-   This page should probably NOT use AdminLayout if AdminLayout requires auth. 
-   Let's check if we can suppress layout or use a simple one. 
-   Actually, AdminLayout will redirect to here if not logged in. 
-   So this page should use a blank layout or MainLayout. Using MainLayout or EmptyLayout is better. *@
 @layout Layout.MainLayout 
 
 <div class="min-h-screen bg-gray-900 flex items-center justify-center p-4">
