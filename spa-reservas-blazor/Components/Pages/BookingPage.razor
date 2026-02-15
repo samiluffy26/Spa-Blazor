@@ -223,10 +223,25 @@
     private List<Service> Services = new();
     private List<TimeOnly> AvailableTimeSlots = new();
 
+    [SupplyParameterFromQuery]
+    public string? ServiceId { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         // Cargar servicios desde el servicio centralizado
         Services = await BookingService.GetServicesAsync();
+
+        // Si hay un ServiceId en la URL, seleccionarlo
+        if (!string.IsNullOrEmpty(ServiceId))
+        {
+            var selectedService = Services.FirstOrDefault(s => s.Id == ServiceId);
+            if (selectedService != null)
+            {
+                BookingService.SetService(selectedService);
+                CurrentStep = 2; // Auto-advance
+                StateHasChanged(); 
+            }
+        }
 
         // Slots de tiempo ejemplo
         GenerateTimeSlots();
