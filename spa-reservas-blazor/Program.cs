@@ -11,6 +11,8 @@ using IAppServiceRepository = spa_reservas_blazor.Application.Interfaces.IServic
 using AppServiceRepository = spa_reservas_blazor.Infrastructure.Repositories.ServiceRepository;
 using spa_reservas_blazor.Application.Interfaces;
 using spa_reservas_blazor.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +34,7 @@ builder.Services.AddScoped<IAppServiceRepository, AppServiceRepository>();
 builder.Services.AddScoped<IAppBookingService, AppBookingService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ISettingRepository, SettingRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 // Client Layer Services (for SSR)
 // Needs HttpClient to call its own API (Loopback)
@@ -43,6 +46,19 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://
 // So we register ClientService, and give it an HttpClient.
 builder.Services.AddScoped<spa_reservas_blazor.Services.IBookingService, spa_reservas_blazor.Services.BookingService>();
 
+
+// Auth
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value!)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
 
 var app = builder.Build();
 
@@ -67,6 +83,8 @@ else
 app.UseHttpsRedirection();
 
 app.UseAntiforgery();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapStaticAssets();
 app.MapControllers();
