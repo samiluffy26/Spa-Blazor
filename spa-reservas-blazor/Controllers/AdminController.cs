@@ -35,9 +35,12 @@ public class AdminController : ControllerBase
     [HttpGet("dashboard-stats")]
     public async Task<ActionResult<DashboardStats>> GetDashboardStats()
     {
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
-        var firstDayOfMonth = new DateOnly(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+        // Usar la hora local del servidor para "Hoy" ya que el usuario reserva en su hora local
+        var today = DateOnly.FromDateTime(DateTime.Now);
+        var firstDayOfMonth = new DateOnly(DateTime.Now.Year, DateTime.Now.Month, 1);
         
+        Console.WriteLine($"[AdminStats] Calculating for Today: {today}");
+
         // 1. Reservas Hoy
         var allBookings = await _bookingRepository.GetAllAsync();
         Console.WriteLine($"[AdminStats] Total bookings in DB: {allBookings.Count}");
@@ -45,12 +48,16 @@ public class AdminController : ControllerBase
         var bookingsToday = allBookings.Count(b => {
             bool dateMatch = b.Date == today;
             bool notCancelled = b.Status != BookingStatus.Cancelled;
-            if (dateMatch) Console.WriteLine($"[AdminStats] Found booking for today! ID: {b.Id}, Status: {b.Status}, Match: {dateMatch && notCancelled}");
+            
+            // Log para debug de por qué no coinciden
+            if (b.Date.Month == today.Month && b.Date.Year == today.Year)
+            {
+                Console.WriteLine($"[AdminStats] Check: ID={b.Id}, Date={b.Date}, Expected={today}, Status={b.Status}, Match={dateMatch && notCancelled}");
+            }
+            
             return dateMatch && notCancelled;
         });
         
-        Console.WriteLine($"[AdminStats] Calculated BookingsToday: {bookingsToday} (Today logic: {today})");
-
         // 2. Ingresos Mes
         var revenueMonth = allBookings
             .Where(b => b.Date >= firstDayOfMonth && b.Status != BookingStatus.Cancelled)
