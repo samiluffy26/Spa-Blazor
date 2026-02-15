@@ -55,17 +55,32 @@
     private LoginRequest LoginModel = new();
     private string ErrorMessage = string.Empty;
 
+    protected override async Task OnInitializedAsync()
+    {
+        // Ensure any previous session is cleared when visiting login page
+        await AuthService.Logout();
+    }
+
     private async Task HandleLogin()
     {
         try
         {
-            await AuthService.Login(LoginModel);
-            Navigation.NavigateTo("/");
+            var response = await AuthService.Login(LoginModel);
+            
+            // Redirect based on role
+            if (response.Role == "Admin")
+            {
+                Navigation.NavigateTo("/admin/dashboard");
+            }
+            else
+            {
+                Navigation.NavigateTo("/");
+            }
         }
         catch (Exception ex)
         {
             ErrorMessage = "Email o contraseña incorrectos.";
-            Console.WriteLine(ex.Message);
+            Console.WriteLine($"Login error: {ex.Message}");
         }
     }
 }
