@@ -46,12 +46,50 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         return state;
     }
 
+        return keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()));
+    }
+    
+    // Helper to handle role mapping if needed (simpler approach above relies on exact match, but let's be robust)
+    // Actually, let's replace the LINQ above with a better loop to handle mapping
+    /*
+        var claims = new List<Claim>();
+        foreach (var kvp in keyValuePairs)
+        {
+            var key = kvp.Key;
+            var value = kvp.Value.ToString();
+            
+            // Map "role" to generic ClaimTypes.Role if simple "role" key is present
+            if (key == "role") 
+            {
+                key = ClaimTypes.Role;
+            }
+            
+            claims.Add(new Claim(key, value));
+        }
+        return claims;
+    */
+    // Re-writing the method content completely:
     public static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
     {
         var payload = jwt.Split('.')[1];
         var jsonBytes = ParseBase64WithoutPadding(payload);
         var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
-        return keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString()));
+        
+        var claims = new List<Claim>();
+        foreach (var kvp in keyValuePairs)
+        {
+            var key = kvp.Key;
+            var value = kvp.Value.ToString();
+            
+            // Fix: Map standard "role" claim to Microsoft's ClaimTypes.Role
+            if (key == "role" || key == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
+            {
+                key = ClaimTypes.Role;
+            }
+
+            claims.Add(new Claim(key, value));
+        }
+        return claims;
     }
 
     private static byte[] ParseBase64WithoutPadding(string base64)
