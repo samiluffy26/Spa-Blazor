@@ -9,6 +9,8 @@ using IAppBookingRepository = spa_reservas_blazor.Application.Interfaces.IBookin
 using AppBookingRepository = spa_reservas_blazor.Infrastructure.Repositories.BookingRepository;
 using IAppServiceRepository = spa_reservas_blazor.Application.Interfaces.IServiceRepository;
 using AppServiceRepository = spa_reservas_blazor.Infrastructure.Repositories.ServiceRepository;
+using spa_reservas_blazor.Application.Interfaces;
+using spa_reservas_blazor.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,8 @@ builder.Services.AddScoped<MongoDbContext>();
 builder.Services.AddScoped<IAppBookingRepository, AppBookingRepository>();
 builder.Services.AddScoped<IAppServiceRepository, AppServiceRepository>();
 builder.Services.AddScoped<IAppBookingService, AppBookingService>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ISettingRepository, SettingRepository>();
 
 // Client Layer Services (for SSR)
 // Needs HttpClient to call its own API (Loopback)
