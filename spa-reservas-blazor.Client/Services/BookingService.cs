@@ -29,6 +29,7 @@ public interface IBookingService
     Task<bool> IsTimeSlotAvailableAsync(DateOnly date, TimeOnly time);
     
     Task<List<Service>> GetServicesAsync();
+    Task<Service?> GetServiceByIdAsync(string id);
     
     event Action OnChange;
 }
@@ -196,6 +197,19 @@ public class BookingService : IBookingService
         {
             _logger.LogError(ex, "Error fetching services");
             return new List<Service>();
+        }
+    }
+
+    public async Task<Service?> GetServiceByIdAsync(string id)
+    {
+        try
+        {
+            return await _http.GetFromJsonAsync<Service>($"api/services/{id}");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Error fetching service {id}");
+            return null;
         }
     }
 }

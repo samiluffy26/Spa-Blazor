@@ -99,8 +99,7 @@
         IsLoading = true;
         try
         {
-            var services = await BookingService.GetServicesAsync();
-            Service = services.FirstOrDefault(s => s.Id == Id);
+            Service = await BookingService.GetServiceByIdAsync(Id);
         }
         finally
         {
