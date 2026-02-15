@@ -8,5 +8,6 @@ public class Service
     public decimal Price { get; set; }
     public int Duration { get; set; } // En minutos
     public string ImageUrl { get; set; } = string.Empty;
-    public string Category { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty; // Keep for display/backup
+    public string CategoryId { get; set; } = string.Empty;
 }
