@@ -1,0 +1,119 @@
+@page "/services/{Id}"
+@using spa_reservas_blazor.Shared.Entities
+@using spa_reservas_blazor.Services
+@inject IBookingService BookingService
+@inject NavigationManager Navigation
+@rendermode InteractiveAuto
+
+<PageTitle>@(Service != null ? Service.Name : "Detalle del Servicio") - RelaxSpa</PageTitle>
+
+<div class="min-h-screen bg-sage-50 py-12">
+    <div class="container-custom">
+        
+        @if (IsLoading)
+        {
+            <div class="flex justify-center items-center min-h-[400px]">
+                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+            </div>
+        }
+        else if (Service == null)
+        {
+            <div class="text-center py-20">
+                <h2 class="text-2xl font-bold text-gray-700 mb-4">Servicio no encontrado</h2>
+                <p class="text-gray-500 mb-8">Lo sentimos, no pudimos encontrar el servicio que buscas.</p>
+                <NavLink href="services" class="btn-secondary">
+                    Volver a Servicios
+                </NavLink>
+            </div>
+        }
+        else
+        {
+            <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden animate-fadeIn">
+                <div class="grid md:grid-cols-2">
+                    
+                    @* Image Side *@
+                    <div class="relative h-64 md:h-full bg-gray-200">
+                         @if (!string.IsNullOrEmpty(Service.ImageUrl))
+                        {
+                            <img src="@Service.ImageUrl" alt="@Service.Name" class="w-full h-full object-cover" />
+                        }
+                        else
+                        {
+                            <div class="w-full h-full flex items-center justify-center bg-sage-100 text-sage-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                            </div>
+                        }
+                    </div>
+
+                    @* Content Side *@
+                    <div class="p-8 md:p-12 flex flex-col justify-center">
+                        <div class="mb-6">
+                            <span class="inline-block px-3 py-1 bg-primary-50 text-primary-700 rounded-full text-sm font-medium mb-4">
+                                @Service.Category
+                            </span>
+                            <h1 class="font-serif text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+                                @Service.Name
+                            </h1>
+                            <div class="flex items-center gap-4 text-gray-600 mb-6">
+                                <div class="flex items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clock"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    <span>@Service.Duration min</span>
+                                </div>
+                                <div class="text-2xl font-bold text-primary-700">
+                                    $@Service.Price
+                                </div>
+                            </div>
+                            
+                            <p class="text-gray-600 leading-relaxed text-lg">
+                                @Service.Description
+                            </p>
+                            @* Mock extended description if needed *@
+                        </div>
+
+                        <div class="space-y-4 mt-auto pt-8 border-t border-gray-100">
+                            <button @onclick="BookNow" class="w-full btn-primary py-4 rounded-xl text-lg font-medium shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-check-2"><path d="M8 2v4"/><path d="M16 2v4"/><path d="M21 14V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"/><path d="M3 10h18"/><path d="m16 20 2 2 4-4"/></svg>
+                                Reservar ahora
+                            </button>
+                            
+                            <NavLink href="services" class="block text-center text-gray-500 hover:text-gray-900 font-medium">
+                                ← Volver a servicios
+                            </NavLink>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private Service? Service;
+    private bool IsLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsLoading = true;
+        try
+        {
+            var services = await BookingService.GetServicesAsync();
+            Service = services.FirstOrDefault(s => s.Id == Id);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    private void BookNow()
+    {
+        if (Service != null)
+        {
+            BookingService.SetService(Service);
+            Navigation.NavigateTo("booking");
+        }
+    }
+}
