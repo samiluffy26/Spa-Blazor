@@ -9,15 +9,8 @@
         if (authState?.User?.Identity is null || !authState.User.Identity.IsAuthenticated)
         {
             var returnUrl = Navigation.Uri;
-             // Check if it's admin path to redirect to admin login
-            if (Data.IsAdminPath(returnUrl))
-            {
-                 Navigation.NavigateTo($"admin/login?returnUrl={Uri.EscapeDataString(returnUrl)}");
-            }
-            else
-            {
-                 Navigation.NavigateTo($"login?returnUrl={Uri.EscapeDataString(returnUrl)}");
-            }
+             // Unified login path
+             Navigation.NavigateTo($"login?returnUrl={Uri.EscapeDataString(returnUrl)}");
         }
     }
     
