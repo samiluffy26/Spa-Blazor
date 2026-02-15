@@ -324,5 +324,9 @@ public class BookingService : IBookingService
         }
     }
 
-    private class UploadResult { public string Url { get; set; } }
+    private class UploadResult 
+    { 
+        [System.Text.Json.Serialization.JsonPropertyName("url")]
+        public string Url { get; set; } = string.Empty; 
+    }
 }

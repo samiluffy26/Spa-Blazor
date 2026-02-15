@@ -4,6 +4,7 @@
 @using spa_reservas_blazor.Services
 @inject IBookingService BookingService
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 @layout Layout.AdminLayout
 @using Microsoft.AspNetCore.Authorization
 
@@ -165,6 +166,10 @@
             if (!string.IsNullOrEmpty(url))
             {
                 CurrentService.ImageUrl = url;
+            }
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("alert", "Error al subir la imagen. Por favor intenta de nuevo.");
             }
         }
     }

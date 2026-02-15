@@ -126,7 +126,7 @@ public class AdminController : ControllerBase
 
     // UPLOAD
     [HttpPost("upload")]
-    public async Task<ActionResult<string>> UploadImage(IFormFile file)
+    public async Task<ActionResult> UploadImage([FromForm] IFormFile file)
     {
         if (file == null || file.Length == 0)
             return BadRequest("No file uploaded.");

@@ -112,6 +112,7 @@ app.UseAntiforgery();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseStaticFiles(); // Importante para servir la carpeta uploads en wwwroot
 app.MapStaticAssets();
 app.MapControllers();
 app.MapRazorComponents<App>()
