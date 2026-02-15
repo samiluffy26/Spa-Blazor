@@ -293,9 +293,9 @@
 @code {
     private List<Service> PopularServices = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        var allServices = BookingService.GetServices();
+        var allServices = await BookingService.GetServicesAsync();
         // IDs: 1 (Relajante), 2 (Facial), 8 (Hidroterapia)
         PopularServices = allServices.Where(s => s.Id == "1" || s.Id == "2" || s.Id == "8").ToList();
     }

@@ -16,7 +16,6 @@ public class BookingService : IBookingService
 
     public async Task<Booking> CreateBookingAsync(Booking booking)
     {
-        // Business logic validations
         if (booking.Date < DateOnly.FromDateTime(DateTime.Today))
         {
             throw new ArgumentException("Booking date cannot be in the past.");
@@ -27,7 +26,7 @@ public class BookingService : IBookingService
             throw new InvalidOperationException("Time slot is not available.");
         }
 
-        booking.Status = BookingStatus.Confirmed; // Auto-confirm for now
+        booking.Status = BookingStatus.Confirmed;
         booking.CreatedAt = DateTime.UtcNow;
         
         return await _bookingRepository.CreateAsync(booking);
@@ -41,6 +40,11 @@ public class BookingService : IBookingService
     public async Task<List<Booking>> GetBookingsByStatusAsync(BookingStatus status)
     {
         return await _bookingRepository.GetByStatusAsync(status);
+    }
+    
+    public async Task<Booking?> GetBookingByIdAsync(string id)
+    {
+        return await _bookingRepository.GetByIdAsync(id);
     }
 
     public async Task CancelBookingAsync(string id)

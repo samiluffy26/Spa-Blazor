@@ -1,13 +1,44 @@
+using MongoDB.Driver;
+using spa_reservas_blazor.Infrastructure.Data;
+using spa_reservas_blazor.Infrastructure.Repositories;
 using spa_reservas_blazor.Components;
+// Aliases to avoid conflicts
+using IAppBookingService = spa_reservas_blazor.Application.Interfaces.IBookingService;
+using AppBookingService = spa_reservas_blazor.Application.Services.BookingService;
+using IAppBookingRepository = spa_reservas_blazor.Application.Interfaces.IBookingRepository;
+using AppBookingRepository = spa_reservas_blazor.Infrastructure.Repositories.BookingRepository;
+using IAppServiceRepository = spa_reservas_blazor.Application.Interfaces.IServiceRepository;
+using AppServiceRepository = spa_reservas_blazor.Infrastructure.Repositories.ServiceRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllers(); 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+// MongoDB Integration (Local)
+var mongoUrl = "mongodb://localhost:27017";
+builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoUrl));
+builder.Services.AddScoped<IMongoDatabase>(sp => sp.GetRequiredService<IMongoClient>().GetDatabase("RelaxSpaDb"));
+builder.Services.AddScoped<MongoDbContext>();
+
+// Application Layer Services (for API)
+builder.Services.AddScoped<IAppBookingRepository, AppBookingRepository>();
+builder.Services.AddScoped<IAppServiceRepository, AppServiceRepository>();
+builder.Services.AddScoped<IAppBookingService, AppBookingService>();
+
+// Client Layer Services (for SSR)
+// Needs HttpClient to call its own API (Loopback)
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5000/") }); // Adjust port if needed, or use NavigationManager?
+// Usually better to read BaseAddress from config or NavigationManager, but in Program.cs we construct it.
+// For development, localhost:5000 might work, or get Kestrel address.
+// A safe bet for SSR is to register the service to call the AppService Directly?
+// But ClientService has extra state logic.
+// So we register ClientService, and give it an HttpClient.
 builder.Services.AddScoped<spa_reservas_blazor.Services.IBookingService, spa_reservas_blazor.Services.BookingService>();
+
 
 var app = builder.Build();
 
@@ -15,20 +46,26 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
+    
+    // Seed Database
+    using (var scope = app.Services.CreateScope())
+    {
+        var context = scope.ServiceProvider.GetRequiredService<MongoDbContext>();
+        await DbInitializer.SeedAsync(context);
+    }
 }
 else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 
-
 app.UseAntiforgery();
 
 app.MapStaticAssets();
+app.MapControllers();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()

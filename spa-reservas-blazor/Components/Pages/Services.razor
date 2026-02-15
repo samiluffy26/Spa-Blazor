@@ -70,11 +70,10 @@
         ("Spa", "Spa y Bienestar")
     };
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        // Simular carga de datos
         // Cargar datos del servicio
-        AllServices = BookingService.GetServices();
+        AllServices = await BookingService.GetServicesAsync();
         
         FilterByCategory(ALL_CATEGORY);
     }

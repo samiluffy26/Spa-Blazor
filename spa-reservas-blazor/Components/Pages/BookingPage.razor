@@ -223,11 +223,10 @@
     private List<Service> Services = new();
     private List<TimeOnly> AvailableTimeSlots = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        // Cargar servicios simulados
         // Cargar servicios desde el servicio centralizado
-        Services = BookingService.GetServices();
+        Services = await BookingService.GetServicesAsync();
 
         // Slots de tiempo ejemplo
         GenerateTimeSlots();
