@@ -5,6 +5,10 @@
     <ProjectReference Include="..\spa-reservas-blazor.Shared\spa-reservas-blazor.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MongoDB.Driver" Version="3.6.0" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <RootNamespace>spa_reservas_blazor.Infrastructure</RootNamespace>
