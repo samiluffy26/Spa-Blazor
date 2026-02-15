@@ -57,8 +57,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value!)),
             ValidateIssuer = false,
-            ValidateAudience = false
+            ValidateAudience = false,
+            RequireExpirationTime = true,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
         };
+        options.UseSecurityTokenValidators = false; // Use the newer JsonWebTokenHandler
+        options.MapInboundClaims = false;
         options.Events = new JwtBearerEvents
         {
             OnAuthenticationFailed = context =>
@@ -96,6 +101,9 @@ else
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 // Header Debugging Middleware
 app.Use(async (context, next) =>
 {
@@ -113,8 +121,6 @@ app.Use(async (context, next) =>
 });
 
 app.UseAntiforgery();
-app.UseAuthentication();
-app.UseAuthorization();
 
 app.MapStaticAssets();
 app.MapControllers();

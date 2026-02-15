@@ -85,7 +85,11 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             {
                 key = ClaimTypes.Email;
             }
-            else if (key == "unique_name" || key == "nameid" || key == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
+            else if (key == "name" || key == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")
+            {
+                key = ClaimTypes.Name;
+            }
+            else if (key == "sub" || key == "unique_name" || key == "nameid" || key == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
             {
                 key = ClaimTypes.NameIdentifier;
             }
