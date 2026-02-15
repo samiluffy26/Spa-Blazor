@@ -40,8 +40,17 @@ public class AdminController : ControllerBase
         
         // 1. Reservas Hoy
         var allBookings = await _bookingRepository.GetAllAsync();
-        var bookingsToday = allBookings.Count(b => b.Date == today && b.Status != BookingStatus.Cancelled);
+        Console.WriteLine($"[AdminStats] Total bookings in DB: {allBookings.Count}");
         
+        var bookingsToday = allBookings.Count(b => {
+            bool dateMatch = b.Date == today;
+            bool notCancelled = b.Status != BookingStatus.Cancelled;
+            if (dateMatch) Console.WriteLine($"[AdminStats] Found booking for today! ID: {b.Id}, Status: {b.Status}, Match: {dateMatch && notCancelled}");
+            return dateMatch && notCancelled;
+        });
+        
+        Console.WriteLine($"[AdminStats] Calculated BookingsToday: {bookingsToday} (Today logic: {today})");
+
         // 2. Ingresos Mes
         var revenueMonth = allBookings
             .Where(b => b.Date >= firstDayOfMonth && b.Status != BookingStatus.Cancelled)
