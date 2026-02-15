@@ -31,7 +31,7 @@ builder.Services.AddScoped<IAppBookingService, AppBookingService>();
 
 // Client Layer Services (for SSR)
 // Needs HttpClient to call its own API (Loopback)
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5000/") }); // Adjust port if needed, or use NavigationManager?
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5199/") }); // Adjust port if needed, or use NavigationManager?
 // Usually better to read BaseAddress from config or NavigationManager, but in Program.cs we construct it.
 // For development, localhost:5000 might work, or get Kestrel address.
 // A safe bet for SSR is to register the service to call the AppService Directly?
