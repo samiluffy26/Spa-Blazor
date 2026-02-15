@@ -123,6 +123,7 @@ public class BookingService : IBookingService
         NotifyStateChanged();
         try 
         {
+             await Task.Delay(10); // Mock delay
              var booking = Bookings.FirstOrDefault(b => b.Id == bookingId);
              if (booking != null)
              {
