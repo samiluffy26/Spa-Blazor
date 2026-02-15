@@ -28,4 +28,14 @@ public class ServiceRepository : IServiceRepository
     {
         await _context.Services.InsertOneAsync(service);
     }
+
+    public async Task UpdateAsync(Service service)
+    {
+        await _context.Services.ReplaceOneAsync(s => s.Id == service.Id, service);
+    }
+
+    public async Task DeleteAsync(string id)
+    {
+        await _context.Services.DeleteOneAsync(s => s.Id == id);
+    }
 }
