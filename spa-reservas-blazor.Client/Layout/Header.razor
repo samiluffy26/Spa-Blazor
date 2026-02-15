@@ -50,19 +50,41 @@
 
             @* CTA Button Desktop *@
             @* CTA Button Desktop & Auth *@
+            @* CTA Button Desktop & Auth *@
             <div class="hidden lg:flex items-center gap-4">
                 <AuthorizeView>
                     <Authorized>
-                        <span class="text-sm font-medium text-gray-700">Hola, @context.User.Identity?.Name</span>
-                        <button @onclick="Logout" class="text-sm font-medium text-gray-500 hover:text-primary-600 transition-colors">
-                            Cerrar Sesión
-                        </button>
-                        @if (context.User.IsInRole("Admin"))
-                        {
-                             <NavLink href="admin/dashboard" class="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
-                                Panel Admin
-                            </NavLink>
-                        }
+                        <div class="flex items-center gap-3 mr-2">
+                             @if (context.User.IsInRole("Admin"))
+                            {
+                                <NavLink href="admin/dashboard" class="flex items-center gap-2 px-3 py-1.5 bg-purple-100 text-purple-700 rounded-lg text-sm font-medium hover:bg-purple-200 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+                                    Dashboard
+                                </NavLink>
+                            }
+                            
+                            <div class="relative group">
+                                <button class="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
+                                    <span>Hola, @context.User.Identity?.Name</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
+                                </button>
+                                @* Simple Dropdown *@
+                                <div class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50">
+                                    <div class="py-1">
+                                        <NavLink href="profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                            Mi Cuenta
+                                        </NavLink>
+                                         <NavLink href="my-bookings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                            Mis Reservas
+                                        </NavLink>
+                                        <div class="border-t border-gray-100 my-1"></div>
+                                        <button @onclick="Logout" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                            Cerrar Sesión
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </Authorized>
                     <NotAuthorized>
                         <NavLink href="login" class="text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors">
