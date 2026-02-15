@@ -16,4 +16,5 @@ public class MongoDbContext
     public IMongoCollection<Service> Services => _database.GetCollection<Service>("Services");
     public IMongoCollection<Category> Categories => _database.GetCollection<Category>("Categories");
     public IMongoCollection<AppSettings> Settings => _database.GetCollection<AppSettings>("Settings");
+    public IMongoCollection<User> Users => _database.GetCollection<User>("Users");
 }
