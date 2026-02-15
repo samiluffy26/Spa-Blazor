@@ -8,12 +8,10 @@ namespace spa_reservas_blazor.Client.Auth;
 public class CustomAuthStateProvider : AuthenticationStateProvider
 {
     private readonly IJSRuntime _jsRuntime;
-    private readonly HttpClient _httpClient;
 
-    public CustomAuthStateProvider(IJSRuntime jsRuntime, HttpClient httpClient)
+    public CustomAuthStateProvider(IJSRuntime jsRuntime)
     {
         _jsRuntime = jsRuntime;
-        _httpClient = httpClient;
     }
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -21,7 +19,6 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
         string token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
 
         var identity = new ClaimsIdentity();
-        _httpClient.DefaultRequestHeaders.Authorization = null;
 
         if (!string.IsNullOrEmpty(token))
         {
@@ -29,8 +26,6 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             {
                 var claims = ParseClaimsFromJwt(token);
                 identity = new ClaimsIdentity(claims, "jwt");
-                _httpClient.DefaultRequestHeaders.Authorization = 
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             }
             catch
             {
@@ -47,7 +42,6 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
     public void UpdateAuthenticationState(string? token)
     {
         var identity = new ClaimsIdentity();
-        _httpClient.DefaultRequestHeaders.Authorization = null;
 
         if (!string.IsNullOrEmpty(token))
         {
@@ -55,13 +49,10 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             {
                 var claims = ParseClaimsFromJwt(token);
                 identity = new ClaimsIdentity(claims, "jwt");
-                _httpClient.DefaultRequestHeaders.Authorization = 
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             }
             catch
             {
-                // Verify if we can remove item here without async, if not, relying on GetAuthenticationStateAsync to clean up is fine
-                // or we assume token passed here is valid
+                // Relying on GetAuthenticationStateAsync or AuthService to cleanup if needed
             }
         }
 
@@ -83,9 +74,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             var key = kvp.Key;
             var value = kvp.Value.ToString();
             
-            Console.WriteLine($"[AuthDebug] Raw Claim: {key} = {value}");
-
-            // Fix: Map standard "role" claim to Microsoft's ClaimTypes.Role
+            // Map standard "role" claim to Microsoft's ClaimTypes.Role
             if (key == "role" || key == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")
             {
                 key = ClaimTypes.Role;
@@ -102,11 +91,6 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
             claims.Add(new Claim(key, value));
         }
         
-        foreach(var c in claims)
-        {
-             Console.WriteLine($"[AuthDebug] Final Claim: {c.Type} = {c.Value}");
-        }
-
         return claims;
     }
 
