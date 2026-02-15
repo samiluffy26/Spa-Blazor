@@ -17,6 +17,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         string token = await _jsRuntime.InvokeAsync<string>("localStorage.getItem", "authToken");
+        if (!string.IsNullOrEmpty(token)) token = token.Trim('\"', ' ', '\t', '\r', '\n');
 
         var identity = new ClaimsIdentity();
 
@@ -41,6 +42,7 @@ public class CustomAuthStateProvider : AuthenticationStateProvider
 
     public void UpdateAuthenticationState(string? token)
     {
+        if (!string.IsNullOrEmpty(token)) token = token.Trim('\"', ' ', '\t', '\r', '\n');
         var identity = new ClaimsIdentity();
 
         if (!string.IsNullOrEmpty(token))

@@ -35,10 +35,10 @@ public class AuthService : IAuthService
         }
 
         var response = await result.Content.ReadFromJsonAsync<AuthResponse>();
-        var cleanToken = response.Token.Trim('\"', ' ');
-        await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", cleanToken);
+        var cleanToken = response.Token?.Trim('\"', ' ', '\t', '\r', '\n') ?? string.Empty;
         
-        ((CustomAuthStateProvider)_authStateProvider).UpdateAuthenticationState(response.Token);
+        await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", cleanToken);
+        ((CustomAuthStateProvider)_authStateProvider).UpdateAuthenticationState(cleanToken);
         
         return response;
     }
@@ -53,10 +53,10 @@ public class AuthService : IAuthService
         }
 
         var response = await result.Content.ReadFromJsonAsync<AuthResponse>();
-        var cleanToken = response.Token.Trim('\"', ' ');
+        var cleanToken = response.Token?.Trim('\"', ' ', '\t', '\r', '\n') ?? string.Empty;
+
         await _jsRuntime.InvokeVoidAsync("localStorage.setItem", "authToken", cleanToken);
-        
-        ((CustomAuthStateProvider)_authStateProvider).UpdateAuthenticationState(response.Token);
+        ((CustomAuthStateProvider)_authStateProvider).UpdateAuthenticationState(cleanToken);
 
         return response;
     }

@@ -14,7 +14,6 @@ public class JwtHeaderHandler : DelegatingHandler
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        // Don't modify auth endpoints
         var isAuthEndpoint = request.RequestUri?.AbsolutePath.Contains("/api/auth/") ?? false;
         
         if (!isAuthEndpoint)
@@ -25,33 +24,37 @@ public class JwtHeaderHandler : DelegatingHandler
                 
                 if (!string.IsNullOrEmpty(token))
                 {
-                    // Defensive cleaning: remove quotes, whitespace, and potential redundant Bearer prefix
-                    token = token.Trim('\"', ' ');
+                    // VERBOSE LOGGING FOR DEBUGGING
+                    Console.WriteLine($"[JwtHandler] Raw token length: {token.Length}");
+                    
+                    // Aggressive cleaning: Remove any non-base64url characters that might have crept in
+                    // JWTs only contain a-z, A-Z, 0-9, -, _, and .
+                    token = token.Trim('\"', ' ', '\t', '\r', '\n');
                     
                     if (token.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
                     {
                         token = token.Substring(7).Trim();
                     }
 
-                    // Only attach if not already present to avoid duplicate headers which mangle the JWT
-                    if (request.Headers.Authorization == null)
+                    // Final check: A valid JWT should have at least 2 dots
+                    int dotCount = token.Count(f => f == '.');
+                    
+                    if (dotCount >= 2)
                     {
-                        Console.WriteLine($"[JwtHandler] Attaching sanitized token (Length: {token.Length})");
-                        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                        if (request.Headers.Authorization == null)
+                        {
+                            Console.WriteLine($"[JwtHandler] Attaching sanitized token. Start: {token.Substring(0, Math.Min(10, token.Length))}... dots: {dotCount}");
+                            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                        }
                     }
-                    else 
+                    else
                     {
-                        Console.WriteLine("[JwtHandler] Authorization header already present, skipping.");
+                        Console.WriteLine($"[JwtHandler] WARNING: Token in localStorage does not look like a JWT (dots: {dotCount}). Value: {token}");
                     }
-                }
-                else
-                {
-                    Console.WriteLine("[JwtHandler] No token found in localStorage.");
                 }
             }
             catch (Exception ex)
             {
-                // Silently handle JS interop failures during early phase
                 Console.WriteLine($"[JwtHandler] JS Interop Error: {ex.Message}");
             }
         }
