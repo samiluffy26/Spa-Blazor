@@ -1,26 +1,34 @@
 @page "/admin/dashboard"
 @layout Layout.AdminLayout
 @using Microsoft.AspNetCore.Authorization
+@using spa_reservas_blazor.Shared.DTOs
+@using spa_reservas_blazor.Services
+@inject IBookingService BookingService
 
 @rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
 
-<AuthorizeView Roles="Admin">
+<AuthorizeView Roles="Admin" Context="authContext">
     <Authorized>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Stats Cards Placeholder -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Stats Cards -->
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Reservas Hoy</h3>
-                <p class="text-3xl font-bold text-gray-900 mt-2">12</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">@Stats.BookingsToday</p>
             </div>
             
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Ingresos Mes</h3>
-                <p class="text-3xl font-bold text-gray-900 mt-2">$3,450</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">$@Stats.RevenueMonth.ToString("N0")</p>
             </div>
 
             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Servicios Activos</h3>
-                <p class="text-3xl font-bold text-gray-900 mt-2">8</p>
+                <p class="text-3xl font-bold text-gray-900 mt-2">@Stats.ActiveServices</p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 class="text-gray-500 text-sm font-medium uppercase tracking-wider">Nuevos Clientes</h3>
+                <p class="text-3xl font-bold text-gray-900 mt-2">@Stats.NewClientsMonth</p>
             </div>
         </div>
 
@@ -38,3 +46,12 @@
         </div>
     </NotAuthorized>
 </AuthorizeView>
+
+@code {
+    private DashboardStats Stats = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Stats = await BookingService.GetDashboardStatsAsync();
+    }
+}

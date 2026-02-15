@@ -28,4 +28,9 @@ public class UserRepository : IUserRepository
     {
         return await _users.Find(u => u.Email == email).AnyAsync();
     }
+
+    public async Task<List<User>> GetAllAsync()
+    {
+        return await _users.Find(_ => true).ToListAsync();
+    }
 }

@@ -1,5 +1,6 @@
 using System.Net.Http.Json;
 using spa_reservas_blazor.Shared.Entities;
+using spa_reservas_blazor.Shared.DTOs;
 using Microsoft.Extensions.Logging;
 
 namespace spa_reservas_blazor.Services;
@@ -44,6 +45,8 @@ public interface IBookingService
     Task UpdateSettingsAsync(AppSettings settings);
     
     Task<string> UploadImageAsync(MultipartFormDataContent content);
+
+    Task<DashboardStats> GetDashboardStatsAsync();
 
     event Action OnChange;
 }
@@ -277,6 +280,19 @@ public class BookingService : IBookingService
             return result?.Url ?? string.Empty;
         }
         return string.Empty;
+    }
+
+    public async Task<DashboardStats> GetDashboardStatsAsync()
+    {
+        try 
+        {
+            return await _http.GetFromJsonAsync<DashboardStats>("api/admin/dashboard-stats") ?? new DashboardStats();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error fetching dashboard stats");
+            return new DashboardStats();
+        }
     }
 
     private class UploadResult { public string Url { get; set; } }

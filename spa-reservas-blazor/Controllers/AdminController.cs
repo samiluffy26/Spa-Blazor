@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using spa_reservas_blazor.Application.Interfaces;
 using spa_reservas_blazor.Shared.Entities;
+using spa_reservas_blazor.Shared.DTOs;
 
 namespace spa_reservas_blazor.Controllers;
 
@@ -10,13 +11,57 @@ public class AdminController : ControllerBase
 {
     private readonly ICategoryRepository _categoryRepository;
     private readonly ISettingRepository _settingRepository;
+    private readonly IBookingRepository _bookingRepository;
+    private readonly IServiceRepository _serviceRepository;
+    private readonly IUserRepository _userRepository;
     private readonly IWebHostEnvironment _env;
 
-    public AdminController(ICategoryRepository categoryRepository, ISettingRepository settingRepository, IWebHostEnvironment env)
+    public AdminController(
+        ICategoryRepository categoryRepository, 
+        ISettingRepository settingRepository, 
+        IBookingRepository bookingRepository,
+        IServiceRepository serviceRepository,
+        IUserRepository userRepository,
+        IWebHostEnvironment env)
     {
         _categoryRepository = categoryRepository;
         _settingRepository = settingRepository;
+        _bookingRepository = bookingRepository;
+        _serviceRepository = serviceRepository;
+        _userRepository = userRepository;
         _env = env;
+    }
+
+    [HttpGet("dashboard-stats")]
+    public async Task<ActionResult<DashboardStats>> GetDashboardStats()
+    {
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var firstDayOfMonth = new DateOnly(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+        
+        // 1. Reservas Hoy
+        var allBookings = await _bookingRepository.GetAllAsync();
+        var bookingsToday = allBookings.Count(b => b.Date == today && b.Status != BookingStatus.Cancelled);
+        
+        // 2. Ingresos Mes
+        var revenueMonth = allBookings
+            .Where(b => b.Date >= firstDayOfMonth && b.Status != BookingStatus.Cancelled)
+            .Sum(b => b.ServicePrice);
+
+        // 3. Servicios Activos
+        var services = await _serviceRepository.GetAllAsync();
+        var activeServices = services.Count;
+
+        // 4. Clientes Nuevos Mes
+        var allUsers = await _userRepository.GetAllAsync();
+        var newClientsMonth = allUsers.Count(u => u.CreatedAt >= DateTime.UtcNow.AddMonths(-1) && u.Role == "Client");
+
+        return Ok(new DashboardStats
+        {
+            BookingsToday = bookingsToday,
+            RevenueMonth = revenueMonth,
+            ActiveServices = activeServices,
+            NewClientsMonth = newClientsMonth
+        });
     }
 
     // CATEGORIES
