@@ -98,7 +98,10 @@
                      }
                      else
                      {
-                         <InputText @bind-Value="CurrentService.ImageUrl" placeholder="https://ejemplo.com/imagen.jpg" class="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500" />
+                         <div class="flex flex-col gap-2">
+                            <InputText @bind-Value="CurrentService.ImageUrl" @bind-Value:event="oninput" placeholder="https://ejemplo.com/imagen.jpg" class="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500" />
+                            <p class="text-xs text-gray-500">Pega una URL de imagen para ver la vista previa al instante.</p>
+                         </div>
                      }
                  </div>
             </div>

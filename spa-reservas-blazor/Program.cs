@@ -108,11 +108,20 @@ else
     app.UseHsts();
 }
 
+// Soporte para imágenes modernas (AVIF, WEBP)
+var provider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider();
+provider.Mappings[".avif"] = "image/avif";
+provider.Mappings[".webp"] = "image/webp";
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    ContentTypeProvider = provider
+});
+
 app.UseAntiforgery();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseStaticFiles(); // Importante para servir la carpeta uploads en wwwroot
 app.MapStaticAssets();
 app.MapControllers();
 app.MapRazorComponents<App>()
