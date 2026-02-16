@@ -41,6 +41,7 @@ public interface IBookingService
     
     Task<List<Category>> GetCategoriesAsync();
     Task CreateCategoryAsync(Category category);
+    Task UpdateCategoryAsync(Category category);
     Task DeleteCategoryAsync(string id);
     
     Task<AppSettings> GetSettingsAsync();
@@ -283,6 +284,11 @@ public class BookingService : IBookingService
     public async Task CreateCategoryAsync(Category category)
     {
         await _http.PostAsJsonAsync("api/admin/categories", category);
+    }
+
+    public async Task UpdateCategoryAsync(Category category)
+    {
+        await _http.PutAsJsonAsync($"api/admin/categories/{category.Id}", category);
     }
 
     public async Task DeleteCategoryAsync(string id)

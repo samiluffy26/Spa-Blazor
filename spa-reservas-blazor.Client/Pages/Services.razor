@@ -24,11 +24,15 @@
 
         @* Categorías *@
         <div class="flex flex-wrap justify-center gap-4 mb-12 animate-fadeIn">
-            @foreach (var category in Categories)
+            <button @onclick="() => FilterByCategory(ALL_CATEGORY)"
+                    class="px-6 py-3 rounded-full font-medium transition-all duration-300 @(SelectedCategory == ALL_CATEGORY ? "bg-primary-600 text-white shadow-lg scale-105" : "bg-white text-gray-600 hover:bg-white/80 hover:shadow-md")">
+                Todos
+            </button>
+            @foreach (var category in DynamicCategories)
             {
-                <button @onclick="() => FilterByCategory(category.id)"
-                        class="px-6 py-3 rounded-full font-medium transition-all duration-300 @(SelectedCategory == category.id ? "bg-primary-600 text-white shadow-lg scale-105" : "bg-white text-gray-600 hover:bg-white/80 hover:shadow-md")">
-                    @category.label
+                <button @onclick="() => FilterByCategory(category.Name)"
+                        class="px-6 py-3 rounded-full font-medium transition-all duration-300 @(SelectedCategory == category.Name ? "bg-primary-600 text-white shadow-lg scale-105" : "bg-white text-gray-600 hover:bg-white/80 hover:shadow-md")">
+                    @category.Name
                 </button>
             }
         </div>
@@ -59,20 +63,13 @@
     private string SelectedCategory = ALL_CATEGORY;
     private List<Service> AllServices = new();
     private List<Service> FilteredServices = new();
-
-    private List<(string id, string label)> Categories = new()
-    {
-        (ALL_CATEGORY, "Todos"),
-        ("Masajes", "Masajes"),
-        ("Faciales", "Faciales"),
-        ("Corporales", "Corporales"),
-        ("Spa", "Spa y Bienestar")
-    };
+    private List<Category> DynamicCategories = new();
 
     protected override async Task OnInitializedAsync()
     {
-        // Cargar datos del servicio
+        // Cargar datos
         AllServices = await BookingService.GetServicesAsync();
+        DynamicCategories = await BookingService.GetCategoriesAsync();
         
         FilterByCategory(ALL_CATEGORY);
     }

@@ -14,22 +14,32 @@
 <div class="space-y-6">
     <div class="flex justify-between items-center">
         <h2 class="text-2xl font-bold text-gray-800">Categorías</h2>
+        @if (IsEditing)
+        {
+            <button @onclick="CancelEdit" class="text-primary-600 hover:text-primary-700 font-medium">Volver a Nueva Categoría</button>
+        }
     </div>
 
-    @* Formulario Creación *@
+    @* Formulario (Creación/Edición) *@
     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-        <h3 class="text-lg font-semibold mb-4 text-gray-700">Nueva Categoría</h3>
-        <EditForm Model="NewCategory" OnValidSubmit="HandleCreate">
+        <h3 class="text-lg font-semibold mb-4 text-gray-700">@(IsEditing ? $"Editando: {NewCategory.Name}" : "Nueva Categoría")</h3>
+        <EditForm Model="NewCategory" OnValidSubmit="HandleSubmit">
             <div class="flex gap-4">
                 <div class="flex-1">
-                    <InputText @bind-Value="NewCategory.Name" placeholder="Nombre de categoría" class="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500" />
+                    <InputText @bind-Value="NewCategory.Name" placeholder="Nombre de categoría" class="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500" required />
                 </div>
                  <div class="flex-1">
                     <InputText @bind-Value="NewCategory.Description" placeholder="Descripción (opcional)" class="w-full rounded-lg border-gray-300 focus:border-primary-500 focus:ring-primary-500" />
                 </div>
                 <button type="submit" class="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition-colors">
-                    Agregar
+                    @(IsEditing ? "Guardar" : "Agregar")
                 </button>
+                @if (IsEditing)
+                {
+                    <button type="button" @onclick="CancelEdit" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-50">
+                        Cancelar
+                    </button>
+                }
             </div>
         </EditForm>
     </div>
@@ -50,7 +60,10 @@
                     <tr class="hover:bg-gray-50">
                         <td class="p-4 font-medium text-gray-900">@category.Name</td>
                         <td class="p-4 text-gray-500">@category.Description</td>
-                        <td class="p-4 text-right">
+                        <td class="p-4 text-right flex justify-end gap-2">
+                            <button @onclick="() => StartEdit(category)" class="text-blue-500 hover:text-blue-700 hover:bg-blue-50 p-2 rounded-lg transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                            </button>
                             <button @onclick="() => HandleDelete(category.Id)" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-colors">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
                             </button>
@@ -82,11 +95,11 @@
 @code {
     private List<Category> Categories = new();
     private Category NewCategory = new();
-    private Category editModel = new(); // Added based on HandleValidSubmit
+    private bool IsEditing => !string.IsNullOrEmpty(NewCategory.Id);
 
     protected override async Task OnInitializedAsync()
     {
-        Categories = await BookingService.GetCategoriesAsync();
+        await LoadCategories();
     }
 
     private async Task LoadCategories()
@@ -94,30 +107,36 @@
         Categories = await BookingService.GetCategoriesAsync();
     }
 
-    private async Task HandleCreate()
+    private void StartEdit(Category category)
     {
-        if (string.IsNullOrWhiteSpace(NewCategory.Name)) return;
-        
-        await BookingService.CreateCategoryAsync(NewCategory);
-        NewCategory = new Category(); // Reset
-        await LoadCategories();
+        NewCategory = new Category
+        {
+            Id = category.Id,
+            Name = category.Name,
+            Description = category.Description
+        };
     }
 
-    private async Task HandleValidSubmit()
+    private void CancelEdit()
     {
-        if (string.IsNullOrEmpty(editModel.Id))
+        NewCategory = new Category();
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (string.IsNullOrWhiteSpace(NewCategory.Name)) return;
+
+        if (IsEditing)
         {
-            await BookingService.CreateCategoryAsync(editModel);
+            await BookingService.UpdateCategoryAsync(NewCategory);
         }
         else
         {
-            // Update not implemented in BookingService yet? checks
-            // await BookingService.UpdateCategoryAsync(editModel);
-            // Assuming create for now or check BookingService
+            await BookingService.CreateCategoryAsync(NewCategory);
         }
-        
-        // IsModalOpen = false; // This variable is not defined in the original context, commenting out
-        Categories = await BookingService.GetCategoriesAsync();
+
+        NewCategory = new Category(); // Reset
+        await LoadCategories();
     }
 
     private async Task HandleDelete(string id)
