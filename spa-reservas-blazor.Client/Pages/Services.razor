@@ -3,6 +3,8 @@
 @using spa_reservas_blazor.Services
 @inject IBookingService BookingService
 
+@rendermode @(new InteractiveWebAssemblyRenderMode(prerender: false))
+
 <PageTitle>Nuestros Servicios - RelaxSpa</PageTitle>
 
 <div class="min-h-screen bg-sage-50 py-12">
@@ -83,7 +85,10 @@
         }
         else
         {
-            FilteredServices = AllServices.Where(s => s.Category == category).ToList();
+            FilteredServices = AllServices
+                .Where(s => string.Equals(s.Category, category, StringComparison.OrdinalIgnoreCase))
+                .ToList();
         }
+        StateHasChanged();
     }
 }
